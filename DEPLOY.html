@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Luminary · Deployment Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04040a;--s1:#09090f;--s2:#0f0f18;
+  --b1:rgba(255,255,255,0.05);--b2:rgba(255,255,255,0.10);
+  --gold:#c8a45a;--gold-dim:rgba(200,164,90,0.12);
+  --tx:#ede8df;--tx-2:rgba(237,232,223,0.60);--tx-3:rgba(237,232,223,0.32);
+  --green:#6edfa0;--red:#e06e6e;--blue:#6eb4df;
+}
+body{background:var(--bg);color:var(--tx);font-family:'Outfit',sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9000}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(4,4,10,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--b1);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase}
+.nav-links{display:flex;gap:1.5rem}
+.nav-links a{font-size:0.8rem;color:var(--tx-3);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--tx)}
+@media(max-width:600px){.nav-links{display:none}}
+
+/* LAYOUT */
+.page{max-width:860px;margin:0 auto;padding:4rem 2rem 8rem;position:relative;z-index:1}
+
+/* TYPOGRAPHY */
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:300;line-height:0.95;letter-spacing:-0.02em;margin-bottom:1rem}
+h1 em{font-style:italic;color:var(--gold)}
+h2{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:400;margin-bottom:0.6rem;padding-top:3rem;border-top:1px solid var(--b1)}
+h3{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;margin:1.5rem 0 0.6rem;color:var(--gold)}
+p{font-size:0.95rem;color:var(--tx-2);margin-bottom:0.8rem;line-height:1.8}
+strong{color:var(--tx);font-weight:500}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* HERO */
+.hero{padding:3rem 0 2rem;border-bottom:1px solid var(--b1);margin-bottom:3rem}
+.hero-tag{font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;display:flex;align-items:center;gap:10px}
+.hero-tag::before{content:'';display:inline-block;width:24px;height:1px;background:var(--gold)}
+.hero-desc{font-size:1.05rem;color:var(--tx-2);max-width:600px;line-height:1.85;margin-bottom:2rem}
+
+/* TRUTH BOX */
+.truth-box{background:rgba(224,110,110,0.08);border:1px solid rgba(224,110,110,0.35);border-radius:12px;padding:1.5rem 1.8rem;margin-bottom:2.5rem}
+.truth-box h3{color:#e06e6e;margin-top:0;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:500;letter-spacing:0.04em;margin-bottom:0.8rem}
+.truth-box p{color:rgba(237,232,223,0.7);margin:0}
+.truth-box ul{color:rgba(237,232,223,0.7);font-size:0.92rem;padding-left:1.2rem;line-height:1.9}
+
+/* STEP CARDS */
+.steps{display:flex;flex-direction:column;gap:1.2rem;margin:1.5rem 0}
+.step-card{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:1.5rem;display:flex;gap:1.2rem;align-items:flex-start;position:relative;overflow:hidden}
+.step-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 0%,rgba(200,164,90,0.03),transparent 60%);pointer-events:none}
+.step-num{width:36px;height:36px;border-radius:50%;background:var(--gold);color:#04040a;font-weight:600;font-size:0.88rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Outfit',sans-serif}
+.step-body{flex:1}
+.step-title{font-size:1rem;font-weight:500;color:var(--tx);margin-bottom:0.4rem}
+.step-desc{font-size:0.88rem;color:var(--tx-2);line-height:1.7;margin-bottom:0}
+
+/* CODE BLOCKS */
+.code{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:1.2rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:0.82rem;color:#a8e6cf;line-height:1.75;overflow-x:auto;margin:0.8rem 0;position:relative}
+.code .comment{color:rgba(237,232,223,0.3)}
+.code .key{color:#c8a45a}
+.code .str{color:#6edfa0}
+.code .cmd{color:#6eb4df}
+.code-label{font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx-3);margin-bottom:0.5rem}
+
+/* INFO BOXES */
+.info-box{border-radius:10px;padding:1.2rem 1.4rem;margin:1rem 0}
+.info-box.green{background:rgba(110,223,160,0.07);border:1px solid rgba(110,223,160,0.25)}
+.info-box.gold{background:var(--gold-dim);border:1px solid rgba(200,164,90,0.3)}
+.info-box.blue{background:rgba(110,180,223,0.07);border:1px solid rgba(110,180,223,0.25)}
+.info-box p{margin:0;font-size:0.9rem;line-height:1.7}
+.info-box strong{color:var(--green)}
+.info-box.gold strong{color:var(--gold)}
+.info-box.blue strong{color:var(--blue)}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;font-size:0.88rem;margin:1rem 0;background:var(--s1);border-radius:12px;overflow:hidden;border:1px solid var(--b1)}
+.data-table th{text-align:left;padding:0.7rem 1rem;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx-3);border-bottom:1px solid var(--b1);font-weight:400;background:var(--s2)}
+.data-table td{padding:0.75rem 1rem;border-bottom:1px solid var(--b1);color:var(--tx-2);vertical-align:top}
+.data-table tr:last-child td{border-bottom:none}
+.data-table td code{font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--gold);background:var(--s2);padding:2px 6px;border-radius:4px}
+.badge{display:inline-block;padding:2px 8px;border-radius:50px;font-size:0.7rem;font-weight:500}
+.badge-green{background:rgba(110,223,160,0.12);color:var(--green);border:1px solid rgba(110,223,160,0.25)}
+.badge-gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(200,164,90,0.3)}
+.badge-red{background:rgba(224,110,110,0.12);color:var(--red);border:1px solid rgba(224,110,110,0.25)}
+
+/* DIVIDER */
+hr{border:none;border-top:1px solid var(--b1);margin:2.5rem 0}
+
+/* TOC */
+.toc{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:1.5rem;margin-bottom:3rem}
+.toc-title{font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--tx-3);margin-bottom:0.8rem}
+.toc-list{display:flex;flex-direction:column;gap:0.35rem}
+.toc-list a{font-size:0.88rem;color:var(--tx-2);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color 0.2s}
+.toc-list a::before{content:'';display:inline-block;width:8px;height:1px;background:var(--b2)}
+.toc-list a:hover{color:var(--gold)}
+
+/* ORBS */
+.orb{position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0}
+</style>
+</head>
+<body>
+
+<div class="orb" style="width:600px;height:600px;top:-200px;right:-200px;background:radial-gradient(circle,rgba(200,164,90,0.07) 0%,transparent 70%)"></div>
+<div class="orb" style="width:500px;height:500px;bottom:-100px;left:-150px;background:radial-gradient(circle,rgba(110,90,200,0.06) 0%,transparent 70%)"></div>
+
+<nav>
+  <div class="nav-brand">✦ Luminary</div>
+  <div class="nav-links">
+    <a href="#why">Why it fails locally</a>
+    <a href="#deploy">Deploy guide</a>
+    <a href="#email">Email setup</a>
+    <a href="#tracking">Tracking</a>
+    <a href="#troubleshoot">Troubleshoot</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="hero">
+    <p class="hero-tag">Deployment Guide</p>
+    <h1>Make Luminary<br/><em>actually work.</em></h1>
+    <p class="hero-desc">The honest guide to deploying Luminary so emails send automatically, links work for everyone, and it stops being a "toy". This takes about 15 minutes.</p>
+  </div>
+
+  <div class="toc">
+    <p class="toc-title">What's in this guide</p>
+    <div class="toc-list">
+      <a href="#why">Why nothing works on localhost</a>
+      <a href="#structure">Project file structure</a>
+      <a href="#deploy">Step-by-step: Deploy to Netlify (free)</a>
+      <a href="#email">Step-by-step: Set up real email sending (Resend — free)</a>
+      <a href="#domain">Optional: Custom domain</a>
+      <a href="#tracking">How open-tracking works</a>
+      <a href="#limits">Free tier limits</a>
+      <a href="#troubleshoot">Troubleshooting</a>
+    </div>
+  </div>
+
+  <!-- WHY -->
+  <section id="why">
+    <h2>Why nothing works on localhost</h2>
+    <div class="truth-box">
+      <h3>⚠ The honest truth about what's been happening</h3>
+      <ul>
+        <li><strong>The link shows <code>127.0.0.1:5500</code></strong> — that address only exists on your computer. The recipient's browser literally cannot reach it. It's like giving someone your home WiFi password and expecting them to connect from another country.</li>
+        <li><strong>Emails cannot be sent from a browser</strong> — it's a security rule. No JavaScript in a browser can send an email directly. Every "send email" button you've seen just opens YOUR mail app. You still have to click Send.</li>
+        <li><strong>Camera requires HTTPS</strong> — on <code>http://</code> or <code>file://</code>, most browsers block camera access entirely.</li>
+      </ul>
+    </div>
+    <div class="info-box green">
+      <p><strong>The fix is simple:</strong> Deploy the files to Netlify (free, 5 minutes) and add a Resend API key (free, 5 minutes). After that, emails send automatically and links work for anyone in the world.</p>
+    </div>
+  </section>
+
+  <!-- FILE STRUCTURE -->
+  <section id="structure">
+    <h2>Project file structure</h2>
+    <p>After downloading, your folder should look exactly like this:</p>
+    <div class="code"><span class="comment"># luminary-prod/  ← this is what you deploy</span>
+├── netlify.toml              <span class="comment"># tells Netlify where files live</span>
+├── public/
+│   ├── send.html             <span class="comment"># sender's form page</span>
+│   └── experience.html       <span class="comment"># birthday person's page</span>
+└── netlify/
+    └── functions/
+        └── send-email.js     <span class="comment"># serverless function (real email)</span></div>
+    <div class="info-box gold">
+      <p><strong>Important:</strong> All three folders must be present. If <code>netlify/functions/send-email.js</code> is missing, automatic email sending won't work (it will fall back to Gmail/Mail app).</p>
+    </div>
+  </section>
+
+  <!-- DEPLOY -->
+  <section id="deploy">
+    <h2>Deploy to Netlify</h2>
+    <p>Netlify is free, takes 5 minutes, and gives you a real <code>https://</code> URL that works for everyone.</p>
+
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Create a free Netlify account</div>
+          <div class="step-desc">Go to <a href="https://netlify.com" target="_blank">netlify.com</a> → click <strong>Sign up</strong> → choose <strong>Sign up with GitHub</strong> or email. It's completely free — no credit card.</div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Drag and drop the folder</div>
+          <div class="step-desc">
+            On the Netlify dashboard, look for <strong>"Deploy manually"</strong> or go to <a href="https://app.netlify.com/drop" target="_blank">app.netlify.com/drop</a>.<br/><br/>
+            Drag the entire <strong><code>luminary-prod</code></strong> folder onto the drop zone. Wait about 20 seconds.<br/><br/>
+            Netlify will give you a URL like: <code style="color:var(--gold)">https://luminous-birthday-abc123.netlify.app</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Verify it's working</div>
+          <div class="step-desc">
+            Open <code>https://your-site.netlify.app/send.html</code> in your browser.<br/>
+            The URL in the experience link should now show <code>https://your-site.netlify.app/experience.html?d=...</code> — not <code>127.0.0.1</code>.<br/><br/>
+            That link now works for <strong>anyone in the world</strong>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box blue">
+      <p><strong>That's the most important step done.</strong> Links now work. Camera works (HTTPS). The birthday person can open the experience from any device, anywhere. Email auto-sending comes next.</p>
+    </div>
+  </section>
+
+  <!-- EMAIL SETUP -->
+  <section id="email">
+    <h2>Set up real automatic email sending</h2>
+    <p>Luminary uses <strong>Resend</strong> — the cleanest email API available. Free tier: <strong>3,000 emails/month</strong>, no credit card required.</p>
+
+    <h3>Step 1 — Create a Resend account</h3>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Sign up at resend.com</div>
+          <div class="step-desc">Go to <a href="https://resend.com" target="_blank">resend.com</a> → <strong>Sign up free</strong>. Confirm your email.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Get your API key</div>
+          <div class="step-desc">In the Resend dashboard → <strong>API Keys</strong> → <strong>Create API Key</strong> → name it "Luminary" → click Create.<br/><br/>Copy the key. It looks like: <code style="color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:0.8rem">re_aBcDeFgH_1234567890abcdef</code><br/><br/><strong>Save it — you'll only see it once.</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Step 2 — Add your domain (or use Resend's test domain)</h3>
+    <div class="info-box gold">
+      <p><strong>Quick option (no domain needed):</strong> On Resend's free tier you can send from <code>onboarding@resend.dev</code> immediately — no domain setup required. Use this to test first.</p>
+    </div>
+    <p>For a proper sender address like <code>birthday@yourdomain.com</code>:</p>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Add your domain in Resend</div>
+          <div class="step-desc">Resend dashboard → <strong>Domains</strong> → <strong>Add Domain</strong> → enter your domain name.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Add DNS records</div>
+          <div class="step-desc">Resend shows you 3 DNS records to add. Log into your domain registrar (Namecheap, GoDaddy, Cloudflare, etc.) and add them. Takes 5–30 minutes to verify.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Step 3 — Add the API key to Netlify</h3>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Open your site settings in Netlify</div>
+          <div class="step-desc">Netlify dashboard → your site → <strong>Site configuration</strong> → <strong>Environment variables</strong> → <strong>Add a variable</strong></div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Add RESEND_API_KEY</div>
+          <div class="step-desc">
+            <p class="code-label">Key</p>
+            <div class="code"><span class="key">RESEND_API_KEY</span></div>
+            <p class="code-label" style="margin-top:0.6rem">Value</p>
+            <div class="code"><span class="str">re_aBcDeFgH_your_actual_key_here</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Add FROM_EMAIL</div>
+          <div class="step-desc">
+            <p class="code-label">Key</p>
+            <div class="code"><span class="key">FROM_EMAIL</span></div>
+            <p class="code-label" style="margin-top:0.6rem">Value (choose one)</p>
+            <div class="code"><span class="comment"># Option A — no domain setup needed (testing)</span>
+<span class="str">Luminary &lt;onboarding@resend.dev&gt;</span>
+
+<span class="comment"># Option B — your own domain (professional)</span>
+<span class="str">Luminary &lt;birthday@yourdomain.com&gt;</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Redeploy your site</div>
+          <div class="step-desc">Netlify dashboard → your site → <strong>Deploys</strong> → <strong>Trigger deploy</strong> → <strong>Deploy site</strong>.<br/><br/>Environment variables only take effect after a new deploy.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Step 4 — Test it</h3>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Open your deployed send.html</div>
+          <div class="step-desc">Go to <code>https://your-site.netlify.app/send.html</code>, fill the form with your own email address as recipient, click Send.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Check your inbox</div>
+          <div class="step-desc">You should receive a beautiful branded email within a few seconds. The button inside opens the experience directly. If it goes to spam, add your domain's SPF/DKIM records in Resend.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box green">
+      <p><strong>Once this works:</strong> Clicking "Send the Experience" in Luminary will automatically send a branded email to every recipient. No manual clicking, no mail app, no copy-pasting. Just done.</p>
+    </div>
+  </section>
+
+  <!-- HOW SENDING WORKS -->
+  <section>
+    <h2>How the email sending works</h2>
+    <p>Here's the exact flow after you deploy:</p>
+    <div class="code"><span class="comment">1. You click "Send the Experience" in send.html</span>
+   ↓
+<span class="comment">2. Browser calls POST /api/send-email (your Netlify function)</span>
+   ↓
+<span class="comment">3. Netlify function receives: recipients[], birthdayName, experienceURL</span>
+   ↓
+<span class="comment">4. Function calls Resend API with your RESEND_API_KEY</span>
+   ↓
+<span class="comment">5. Resend sends a beautiful branded HTML email to each recipient</span>
+   ↓
+<span class="comment">6. Recipient's inbox receives the email within seconds</span>
+   ↓
+<span class="comment">7. They click the button → opens experience.html with their data</span>
+   ↓
+<span class="comment">8. Success screen shows "✅ Sent to X recipients!"</span></div>
+
+    <p>If the API is not set up (local development), Luminary automatically falls back to showing Gmail / Mail app buttons so nothing ever breaks.</p>
+  </section>
+
+  <!-- DOMAIN -->
+  <section id="domain">
+    <h2>Optional: Custom domain</h2>
+    <p>Replace <code>luminous-birthday-abc123.netlify.app</code> with <code>luminary.yourdomain.com</code>:</p>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Add domain in Netlify</div>
+          <div class="step-desc">Netlify dashboard → your site → <strong>Domain management</strong> → <strong>Add a domain</strong> → enter <code>luminary.yourdomain.com</code></div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Add CNAME record at your registrar</div>
+          <div class="step-desc">
+            <div class="code"><span class="key">Type:</span>  <span class="str">CNAME</span>
+<span class="key">Name:</span>  <span class="str">luminary</span>
+<span class="key">Value:</span> <span class="str">your-site-name.netlify.app</span></div>
+            Wait 5–60 minutes for DNS to propagate. Netlify auto-provisions HTTPS.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRACKING -->
+  <section id="tracking">
+    <h2>How open-tracking works</h2>
+    <table class="data-table">
+      <thead><tr><th>Event</th><th>How it's tracked</th><th>Where stored</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Sent</strong></td><td>Sender clicks "Mark sent" OR API returns success</td><td>Your browser's localStorage</td></tr>
+        <tr><td><strong>Opened</strong></td><td>experience.html writes <code>openedAt</code> timestamp on load</td><td>Same browser's localStorage</td></tr>
+        <tr><td><strong>Response</strong></td><td>Birthday person submits thank-you panel</td><td>Their browser's localStorage</td></tr>
+      </tbody>
+    </table>
+    <div class="info-box gold">
+      <p><strong>Current limitation:</strong> "Opened" tracking only works if the recipient opens the link on the same browser/device you sent from (because localStorage is per-browser). For real cross-device tracking, a server endpoint is needed — see Future Improvements below.</p>
+    </div>
+    <h3>Real open tracking (advanced)</h3>
+    <p>To track opens across any device, add a second Netlify function that records opens server-side:</p>
+    <div class="code"><span class="comment"># netlify/functions/track-open.js</span>
+<span class="comment"># The experience.html calls: GET /api/track-open?id=WISH_ID</span>
+<span class="comment"># Store to: Supabase (free), Airtable (free), or Netlify Blobs (free)</span></div>
+    <p>This is a straightforward addition once the core deployment is working.</p>
+  </section>
+
+  <!-- FREE TIER LIMITS -->
+  <section id="limits">
+    <h2>Free tier limits</h2>
+    <table class="data-table">
+      <thead><tr><th>Service</th><th>Free limit</th><th>What happens if exceeded</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Netlify Hosting</strong></td><td>100GB bandwidth/month</td><td>Site goes down until next month</td></tr>
+        <tr><td><strong>Netlify Functions</strong></td><td>125,000 invocations/month</td><td>Functions stop running</td></tr>
+        <tr><td><strong>Resend Emails</strong></td><td>3,000 emails/month</td><td>Emails fail, fallback to Gmail</td></tr>
+        <tr><td><strong>Resend Daily</strong></td><td>100 emails/day</td><td>Queued or rejected</td></tr>
+      </tbody>
+    </table>
+    <p>For a personal birthday platform these limits are effectively unlimited. 3,000 emails/month = 100 birthdays/month with 30 recipients each.</p>
+  </section>
+
+  <!-- TROUBLESHOOTING -->
+  <section id="troubleshoot">
+    <h2>Troubleshooting</h2>
+
+    <h3>Email not sending — "API error"</h3>
+    <div class="code"><span class="comment"># Check 1: Is RESEND_API_KEY set in Netlify?</span>
+Netlify → Site config → Environment variables → look for RESEND_API_KEY
+
+<span class="comment"># Check 2: Did you redeploy after adding the key?</span>
+Netlify → Deploys → Trigger deploy → Deploy site
+
+<span class="comment"># Check 3: Check function logs</span>
+Netlify → Functions → send-email → View logs</div>
+
+    <h3>Email goes to spam</h3>
+    <p>Add your domain to Resend and verify the DNS records (SPF, DKIM, DMARC). Resend's dashboard shows exactly which records to add and confirms when they're verified.</p>
+
+    <h3>Link still shows 127.0.0.1</h3>
+    <p>You're still opening the file locally. Open the <strong>Netlify URL</strong>, not the local file. The URL must start with <code>https://</code>.</p>
+
+    <h3>Camera doesn't work</h3>
+    <p>Camera requires <code>https://</code>. Once deployed to Netlify, this works automatically. Never works on <code>file://</code>.</p>
+
+    <h3>Function returns 500 error</h3>
+    <div class="code"><span class="comment"># View real-time function logs:</span>
+Netlify dashboard → your site → Functions → send-email → View log stream
+
+<span class="comment"># Common causes:</span>
+<span class="comment"># - RESEND_API_KEY not set or incorrect</span>
+<span class="comment"># - FROM_EMAIL domain not verified in Resend</span>
+<span class="comment"># - Daily email limit exceeded (100/day free)</span></div>
+
+    <h3>Photos not showing in the experience</h3>
+    <p>Photos are encoded into the URL. If too many/large photos are uploaded, the URL exceeds browser limits. The size warning appears when photos exceed 800KB combined. Try 3–4 photos max, or smaller images.</p>
+  </section>
+
+  <!-- WHAT YOU NOW HAVE -->
+  <section>
+    <h2>What you have after deployment</h2>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Local (before)</th><th>Deployed (after)</th></tr></thead>
+      <tbody>
+        <tr><td>Experience link works for recipient</td><td><span class="badge badge-red">✗ Only on your PC</span></td><td><span class="badge badge-green">✓ Anyone, anywhere</span></td></tr>
+        <tr><td>Email sends automatically</td><td><span class="badge badge-red">✗ Opens your mail app</span></td><td><span class="badge badge-green">✓ Sends instantly</span></td></tr>
+        <tr><td>Camera / hand tracking</td><td><span class="badge badge-red">✗ Blocked on file://</span></td><td><span class="badge badge-green">✓ Works (HTTPS)</span></td></tr>
+        <tr><td>Multiple recipients at once</td><td><span class="badge badge-red">✗ Manual for each</span></td><td><span class="badge badge-green">✓ All sent in one click</span></td></tr>
+        <tr><td>Branded email template</td><td><span class="badge badge-red">✗ Plain text only</span></td><td><span class="badge badge-green">✓ Beautiful HTML email</span></td></tr>
+        <tr><td>Cost</td><td><span class="badge badge-gold">Free</span></td><td><span class="badge badge-gold">Free</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr/>
+  <p style="text-align:center;font-size:0.82rem;color:var(--tx-3)">Luminary · Deployment Guide · Version 2.0</p>
+
+</div>
+</body>
+</html>

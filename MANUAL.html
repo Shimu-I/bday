@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Luminary · Complete User Manual</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04040a;--s1:#09090f;--s2:#0f0f18;--s3:#141420;
+  --b1:rgba(255,255,255,0.05);--b2:rgba(255,255,255,0.10);--b3:rgba(255,255,255,0.18);
+  --gold:#c8a45a;--gold-lite:#e4c988;--gold-dim:rgba(200,164,90,0.12);
+  --tx:#ede8df;--tx-2:rgba(237,232,223,0.62);--tx-3:rgba(237,232,223,0.32);
+  --green:#6edfa0;--red:#e06e6e;--blue:#6eb4df;--purple:#a08de8;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Outfit',sans-serif;font-weight:300;line-height:1.75;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+
+/* NOISE */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9000}
+
+/* ORBS */
+.orb{position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:500;background:rgba(4,4,10,0.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--b1);padding:0.9rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:0.22em;color:var(--gold);text-transform:uppercase;white-space:nowrap}
+.nav-links{display:flex;gap:1.2rem;flex-wrap:wrap}
+.nav-links a{font-size:0.78rem;color:var(--tx-3);text-decoration:none;letter-spacing:0.04em;transition:color 0.2s}
+.nav-links a:hover{color:var(--gold)}
+@media(max-width:640px){.nav-links{display:none}}
+
+/* PAGE */
+.page{max-width:900px;margin:0 auto;padding:3rem 2rem 8rem;position:relative;z-index:1}
+@media(max-width:600px){.page{padding:2rem 1.2rem 6rem}}
+
+/* SECTION DIVIDERS */
+section{margin-bottom:5rem}
+section:first-child{margin-bottom:3rem}
+
+/* HEADINGS */
+.section-eyebrow{font-size:0.65rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:0.7rem;display:flex;align-items:center;gap:10px}
+.section-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--gold)}
+h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;line-height:1;letter-spacing:-0.02em;margin-bottom:0.8rem}
+h2 em{font-style:italic;color:var(--gold)}
+h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;margin:2rem 0 0.6rem;color:var(--tx)}
+h4{font-size:1rem;font-weight:500;color:var(--gold);margin:1.4rem 0 0.5rem;letter-spacing:0.03em}
+p{font-size:0.95rem;color:var(--tx-2);margin-bottom:0.8rem;line-height:1.82}
+strong{color:var(--tx);font-weight:500}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--gold);background:var(--s2);padding:2px 6px;border-radius:4px;border:1px solid var(--b1)}
+
+/* DIVIDER */
+.hr{width:100%;height:1px;background:var(--b1);margin:1rem 0 2rem}
+
+/* FILE CARDS */
+.file-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+@media(max-width:640px){.file-grid{grid-template-columns:1fr}}
+.file-card{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:1.4rem;position:relative;overflow:hidden;transition:border-color 0.2s}
+.file-card:hover{border-color:var(--b2)}
+.file-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 0%,rgba(200,164,90,0.03),transparent 60%);pointer-events:none}
+.file-icon{font-size:1.8rem;margin-bottom:0.7rem}
+.file-name{font-family:'JetBrains Mono',monospace;font-size:0.88rem;color:var(--gold);font-weight:400;margin-bottom:0.5rem}
+.file-role{font-size:0.82rem;font-weight:500;color:var(--tx);margin-bottom:0.4rem}
+.file-desc{font-size:0.8rem;color:var(--tx-2);line-height:1.65}
+.file-badge{display:inline-block;margin-top:0.6rem;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 9px;border-radius:50px}
+.badge-sender{background:rgba(200,164,90,0.12);color:var(--gold);border:1px solid rgba(200,164,90,0.3)}
+.badge-receiver{background:rgba(110,180,223,0.12);color:var(--blue);border:1px solid rgba(110,180,223,0.3)}
+.badge-server{background:rgba(160,141,232,0.12);color:var(--purple);border:1px solid rgba(160,141,232,0.3)}
+.badge-config{background:rgba(110,223,160,0.12);color:var(--green);border:1px solid rgba(110,223,160,0.3)}
+
+/* FLOW DIAGRAM */
+.flow{display:flex;flex-direction:column;gap:0;margin:1.5rem 0}
+.flow-node{display:flex;align-items:flex-start;gap:1.2rem;padding:1.2rem 0 1.2rem 2rem;border-left:1px solid var(--b2);margin-left:1.4rem;position:relative}
+.flow-node::before{content:attr(data-n);position:absolute;left:-1px;top:1.2rem;transform:translateX(-50%);width:26px;height:26px;border-radius:50%;background:var(--gold);color:#04030a;font-size:0.72rem;font-weight:600;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center}
+.flow-node:last-child{border-left-color:transparent}
+.fn-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px}
+.fn-title{font-size:0.95rem;font-weight:500;color:var(--tx);margin-bottom:0.3rem}
+.fn-desc{font-size:0.85rem;color:var(--tx-2);line-height:1.65}
+.fn-code{font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--gold);background:var(--s2);padding:4px 10px;border-radius:6px;margin-top:0.4rem;display:inline-block;border:1px solid var(--b1)}
+
+/* STEP CARDS */
+.steps{display:flex;flex-direction:column;gap:0.9rem;margin:1.2rem 0}
+.step-card{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:1.2rem 1.4rem;display:flex;gap:1rem;align-items:flex-start}
+.step-n{width:32px;height:32px;border-radius:50%;background:var(--gold);color:#04030a;font-weight:600;font-size:0.82rem;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-n.blue{background:var(--blue);color:#04040a}
+.step-n.green{background:var(--green);color:#04040a}
+.step-body .step-title{font-size:0.95rem;font-weight:500;color:var(--tx);margin-bottom:0.3rem}
+.step-body .step-desc{font-size:0.85rem;color:var(--tx-2);line-height:1.65;margin:0}
+.step-body .step-desc ul{padding-left:1rem;margin-top:0.4rem}
+.step-body .step-desc li{margin-bottom:0.25rem}
+
+/* INFO BOXES */
+.box{border-radius:10px;padding:1.1rem 1.4rem;margin:1rem 0}
+.box p{margin:0;font-size:0.9rem;line-height:1.7}
+.box-gold{background:var(--gold-dim);border:1px solid rgba(200,164,90,0.3)}
+.box-gold p{color:rgba(237,232,223,0.75)}
+.box-gold strong{color:var(--gold)}
+.box-green{background:rgba(110,223,160,0.07);border:1px solid rgba(110,223,160,0.25)}
+.box-green p{color:rgba(237,232,223,0.75)}
+.box-green strong{color:var(--green)}
+.box-red{background:rgba(224,110,110,0.07);border:1px solid rgba(224,110,110,0.25)}
+.box-red p{color:rgba(237,232,223,0.75)}
+.box-red strong{color:var(--red)}
+.box-blue{background:rgba(110,180,223,0.07);border:1px solid rgba(110,180,223,0.25)}
+.box-blue p{color:rgba(237,232,223,0.75)}
+.box-blue strong{color:var(--blue)}
+
+/* CODE BLOCKS */
+.codeblock{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:1.2rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#a8e6cf;line-height:1.8;overflow-x:auto;margin:0.8rem 0}
+.codeblock .cm{color:rgba(237,232,223,0.28)}
+.codeblock .k{color:#c8a45a}
+.codeblock .s{color:#6edfa0}
+.codeblock .h{color:#6eb4df}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:0.88rem;margin:1rem 0;border-radius:12px;overflow:hidden;border:1px solid var(--b1)}
+.tbl th{text-align:left;padding:0.65rem 1rem;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx-3);border-bottom:1px solid var(--b1);font-weight:400;background:var(--s2)}
+.tbl td{padding:0.72rem 1rem;border-bottom:1px solid var(--b1);color:var(--tx-2);vertical-align:top;background:var(--s1)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl td:first-child{color:var(--tx);font-weight:400}
+.pill{display:inline-block;padding:2px 8px;border-radius:50px;font-size:0.68rem;font-weight:500}
+.pill-g{background:rgba(110,223,160,0.12);color:var(--green);border:1px solid rgba(110,223,160,0.25)}
+.pill-r{background:rgba(224,110,110,0.12);color:var(--red);border:1px solid rgba(224,110,110,0.25)}
+.pill-gold{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(200,164,90,0.3)}
+
+/* TOC */
+.toc{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:1.5rem;margin-bottom:3rem}
+.toc h4{color:var(--tx-3);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;margin:0 0 0.8rem;font-family:'Outfit',sans-serif}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.3rem}
+@media(max-width:500px){.toc-grid{grid-template-columns:1fr}}
+.toc a{font-size:0.85rem;color:var(--tx-2);text-decoration:none;display:flex;align-items:center;gap:6px;padding:0.25rem 0;transition:color 0.2s}
+.toc a::before{content:'';display:inline-block;width:6px;height:1px;background:var(--b2);flex-shrink:0}
+.toc a:hover{color:var(--gold)}
+
+/* HERO */
+.hero{padding:3rem 0 2.5rem;border-bottom:1px solid var(--b1);margin-bottom:3rem}
+.hero-tag{font-size:0.65rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;display:flex;align-items:center;gap:10px}
+.hero-tag::before{content:'';display:inline-block;width:24px;height:1px;background:var(--gold)}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,6vw,5rem);font-weight:300;line-height:0.92;letter-spacing:-0.02em;margin-bottom:1.2rem}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero p{font-size:1.05rem;color:var(--tx-2);max-width:600px;line-height:1.85}
+
+/* SCREEN MOCKUP */
+.screen-mock{background:var(--s2);border:1px solid var(--b2);border-radius:12px;overflow:hidden;margin:1.2rem 0}
+.screen-bar{background:var(--s3);padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;border-bottom:1px solid var(--b1)}
+.screen-dot{width:10px;height:10px;border-radius:50%}
+.screen-url{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--tx-3);margin-left:0.5rem}
+.screen-body{padding:1.2rem 1.4rem}
+.screen-body p{font-size:0.82rem;color:var(--tx-2);margin:0;line-height:1.65}
+
+/* COMPARISON */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.2rem 0}
+@media(max-width:540px){.compare-grid{grid-template-columns:1fr}}
+.compare-card{background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:1.2rem}
+.compare-title{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.8rem;font-weight:500}
+.compare-card.local .compare-title{color:var(--red)}
+.compare-card.prod .compare-title{color:var(--green)}
+.compare-item{display:flex;align-items:flex-start;gap:0.5rem;font-size:0.85rem;color:var(--tx-2);margin-bottom:0.4rem;line-height:1.5}
+.ci{font-size:0.9rem;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div class="orb" style="width:600px;height:600px;top:-200px;right:-200px;background:radial-gradient(circle,rgba(200,164,90,0.07) 0%,transparent 70%)"></div>
+<div class="orb" style="width:500px;height:500px;bottom:-100px;left:-150px;background:radial-gradient(circle,rgba(110,90,200,0.06) 0%,transparent 70%)"></div>
+
+<nav>
+  <div class="nav-logo">✦ Luminary</div>
+  <div class="nav-links">
+    <a href="#files">Files</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#sender">Sender Guide</a>
+    <a href="#receiver">Receiver Guide</a>
+    <a href="#local">Run Locally</a>
+    <a href="#deploy">Deploy Online</a>
+    <a href="#email-setup">Email Setup</a>
+    <a href="#faq">FAQ</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-tag">Complete User Manual</p>
+    <h1>Luminary —<br/><em>everything explained.</em></h1>
+    <p>Which file does what. How the sender creates and sends a birthday experience. How the receiver opens it. How to run it on your computer. How to deploy it so it actually works online. All of it, clearly.</p>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <h4>Contents</h4>
+    <div class="toc-grid">
+      <a href="#files">① What each file does</a>
+      <a href="#how-it-works">② How the whole thing works</a>
+      <a href="#sender">③ Sender — full walkthrough</a>
+      <a href="#receiver">④ Receiver — full walkthrough</a>
+      <a href="#dashboard">⑤ Dashboard guide</a>
+      <a href="#handtracking">⑥ Hand tracking guide</a>
+      <a href="#local">⑦ Running locally</a>
+      <a href="#deploy">⑧ Deploying online (free)</a>
+      <a href="#email-setup">⑨ Email setup (Resend)</a>
+      <a href="#faq">⑩ FAQ & troubleshooting</a>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 1: FILES ═══ -->
+  <section id="files">
+    <p class="section-eyebrow">Section 1</p>
+    <h2>What each <em>file does</em></h2>
+    <p>Luminary is just <strong>three files</strong>. That's the entire application. Here's exactly what each one is and who uses it:</p>
+
+    <div class="file-grid">
+      <div class="file-card">
+        <div class="file-icon">📋</div>
+        <div class="file-name">send.html</div>
+        <div class="file-role">The Sender's Dashboard</div>
+        <div class="file-desc">This is the page the <strong>person giving the birthday wish</strong> opens. It contains a 4-step form where they type the birthday person's name, add recipients, write a letter, record a voice message, upload photos, and choose a theme. When they click Send, it sends a real email with a link. It also has a Dashboard tab showing all past wishes and who opened them.</div>
+        <div><span class="file-badge badge-sender">Used by: Sender only</span></div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-icon">🎂</div>
+        <div class="file-name">experience.html</div>
+        <div class="file-role">The Birthday Experience</div>
+        <div class="file-desc">This is the page the <strong>birthday person opens</strong> when they click the link in their email. It shows the cinematic curtain with their name, the animated birthday cake with hand-tracking, their personalised letter, voice message, memory slideshow, age countdown, and a response panel. They never see send.html. This page reads all the personalised data from the URL link itself.</div>
+        <div><span class="file-badge badge-receiver">Used by: Receiver only</span></div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-icon">⚡</div>
+        <div class="file-name">netlify/functions/<br/>send-email.js</div>
+        <div class="file-role">The Email Server</div>
+        <div class="file-desc">This is a small server-side script that runs on Netlify's servers (not in the browser). When the sender clicks "Send the Experience", send.html calls this function, which uses the Resend email API to actually deliver the email to the recipient's inbox. Without this, emails don't send automatically — the app falls back to opening Gmail or Mail app manually.</div>
+        <div><span class="file-badge badge-server">Runs on: Netlify server</span></div>
+      </div>
+
+      <div class="file-card">
+        <div class="file-icon">⚙️</div>
+        <div class="file-name">netlify.toml</div>
+        <div class="file-role">Deployment Configuration</div>
+        <div class="file-desc">A configuration file that tells Netlify where the HTML files live (the <code>public/</code> folder) and where the server functions live (<code>netlify/functions/</code>). Also sets up the URL routing so <code>/api/send-email</code> calls the right function. You never edit this file — it just needs to be present.</div>
+        <div><span class="file-badge badge-config">Infrastructure only</span></div>
+      </div>
+    </div>
+
+    <h3>Full folder structure</h3>
+    <div class="codeblock"><span class="cm"># This is what you deploy to Netlify:</span>
+
+luminary-prod/
+├── <span class="k">netlify.toml</span>              <span class="cm">← tells Netlify how to serve everything</span>
+├── <span class="k">DEPLOY.html</span>               <span class="cm">← deployment guide (open in browser)</span>
+├── <span class="k">MANUAL.html</span>               <span class="cm">← this file (user manual)</span>
+│
+├── public/                   <span class="cm">← all files the browser can see</span>
+│   ├── <span class="s">send.html</span>             <span class="cm">← sender opens this</span>
+│   └── <span class="s">experience.html</span>       <span class="cm">← receiver opens this</span>
+│
+└── netlify/
+    └── functions/
+        └── <span class="h">send-email.js</span>     <span class="cm">← server function (real email)</span></div>
+
+    <div class="box box-gold">
+      <p><strong>The two HTML files are completely self-contained.</strong> Every line of CSS, JavaScript, and logic is inside each HTML file — no external stylesheets, no script imports, no build step required. Open them directly in a browser and they work.</p>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 2: HOW IT WORKS ═══ -->
+  <section id="how-it-works">
+    <p class="section-eyebrow">Section 2</p>
+    <h2>How the whole <em>thing works</em></h2>
+    <p>Here is the complete journey from sender to receiver, explained step by step:</p>
+
+    <div class="flow">
+      <div class="flow-node" data-n="1">
+        <div class="fn-icon">✍️</div>
+        <div>
+          <div class="fn-title">Sender opens send.html and fills the form</div>
+          <div class="fn-desc">The sender types the birthday person's name, age, birthday date, and adds recipient email addresses. They write a letter, optionally record a voice message, upload photos, and choose a visual theme. All of this happens in the browser — nothing is sent to any server yet.</div>
+        </div>
+      </div>
+
+      <div class="flow-node" data-n="2">
+        <div class="fn-icon">🔗</div>
+        <div>
+          <div class="fn-title">All data is packed into a single URL</div>
+          <div class="fn-desc">When the sender clicks Send, JavaScript takes everything they entered — name, letter, photos, voice recording, theme, candle count — compresses the photos, and encodes it all into one long URL parameter. This is the experience link.</div>
+          <div class="fn-code">https://yoursite.netlify.app/experience.html?d=eyJuYW1lIjoiWmFyYSIs...</div>
+        </div>
+      </div>
+
+      <div class="flow-node" data-n="3">
+        <div class="fn-icon">📧</div>
+        <div>
+          <div class="fn-title">A real email is sent to the recipient</div>
+          <div class="fn-desc">send.html calls the Netlify serverless function (<code>send-email.js</code>), which uses the Resend email API to send a beautiful branded HTML email to each recipient. The email contains the experience link as a button. This happens automatically — no manual clicking, no mail app needed.</div>
+          <div class="fn-code">POST /api/send-email → Resend API → recipient's inbox</div>
+        </div>
+      </div>
+
+      <div class="flow-node" data-n="4">
+        <div class="fn-icon">📩</div>
+        <div>
+          <div class="fn-title">Recipient receives the email</div>
+          <div class="fn-desc">The birthday person gets a beautiful email with their name in the subject line, a warm message, and a gold button saying "Open Your Birthday Experience". The email works on any email client — Gmail, Outlook, Apple Mail, Yahoo.</div>
+        </div>
+      </div>
+
+      <div class="flow-node" data-n="5">
+        <div class="fn-icon">🎭</div>
+        <div>
+          <div class="fn-title">Receiver clicks the link — experience loads</div>
+          <div class="fn-desc">experience.html opens in their browser. It reads the <code>?d=...</code> parameter from the URL, decodes it, and rebuilds the entire personalised experience — their name, the letter, the photos, the voice message, the candle count, the theme. Everything is already in the link. No server request needed.</div>
+        </div>
+      </div>
+
+      <div class="flow-node" data-n="6">
+        <div class="fn-icon">✨</div>
+        <div>
+          <div class="fn-title">The birthday party plays out</div>
+          <div class="fn-desc">A cinematic curtain shows their name. They click in, the camera activates, they light candles with their finger, all candles lit reveals their personalised wish, the slideshow plays with Ken Burns effects, the letter appears in elegant italic type, the voice message plays. They can capture polaroid moments and send a thank-you response.</div>
+        </div>
+      </div>
+
+      <div class="flow-node" data-n="7">
+        <div class="fn-icon">📊</div>
+        <div>
+          <div class="fn-title">Sender sees it was opened</div>
+          <div class="fn-desc">When the recipient opens the link, experience.html writes an "opened" timestamp to the browser's local storage. The sender can check the Dashboard tab in send.html to see who received and who opened each experience.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box box-blue">
+      <p><strong>The key insight:</strong> The experience link is self-contained. It doesn't phone home to any server when the recipient opens it. The entire birthday party lives inside the URL. This is why it works from any device, any browser, any country.</p>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 3: SENDER ═══ -->
+  <section id="sender">
+    <p class="section-eyebrow">Section 3</p>
+    <h2>Sender — <em>full walkthrough</em></h2>
+    <p>You are the sender if you want to create and send a birthday experience to someone. Here is every step in detail.</p>
+
+    <h3>Opening the app</h3>
+    <p>Open <code>send.html</code> in your browser. If running locally, double-click the file or open it via a local server. If deployed, go to <code>https://your-site.netlify.app/send.html</code>.</p>
+    <p>You'll see the Luminary dashboard with two tabs at the top: <strong>✦ Compose</strong> and <strong>◈ Dashboard</strong>. Start on Compose.</p>
+
+    <h3>Step 1 of 4 — About the birthday person</h3>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">Enter their name (required)</div>
+          <div class="step-desc">This appears on the curtain intro, in the wish message, in the email subject, and throughout the experience. Use their first name or nickname.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">Enter their age (optional)</div>
+          <div class="step-desc">Used on the experience page to show how many days they've been alive. Leave blank if you don't want to reveal their age.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <div class="step-title">Enter their birthday date (optional)</div>
+          <div class="step-desc">Powers a live countdown to their next birthday, ticking to the second. Leave blank to hide the countdown.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">4</div>
+        <div class="step-body">
+          <div class="step-title">Add recipient emails (required — at least one)</div>
+          <div class="step-desc">
+            Type an email address in the field and either press <strong>Enter</strong> or click <strong>+ Add</strong>. Repeat for each recipient. You can add as many as you like.<br/><br/>
+            Each email appears as a chip below the field with an × to remove it.<br/><br/>
+            <strong>Important:</strong> You must click + Add (or press Enter) for each email. Simply typing an address and clicking Continue will auto-add it for you, but it's clearer to click + Add explicitly.
+          </div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">5</div>
+        <div class="step-body">
+          <div class="step-title">Choose wish language</div>
+          <div class="step-desc">Select English, Bengali, Spanish, Arabic, or French. The personalised birthday wish that appears after all candles are lit will be in this language.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">6</div>
+        <div class="step-body">
+          <div class="step-title">Click Continue →</div>
+          <div class="step-desc">The progress bar at the top advances. If name or email is missing, a red error message appears below the relevant field.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Step 2 of 4 — Your message</h3>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">Your name (optional)</div>
+          <div class="step-desc">Shown on the experience as "Arranged with love by [your name]" and signed at the bottom of the letter.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">Write a heartfelt letter (optional)</div>
+          <div class="step-desc">This appears in elegant Cormorant Garamond italic font on the experience page with a gold left-border accent. Write as much or as little as you like. The field scrolls if the letter is long.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <div class="step-title">Record a voice message (optional)</div>
+          <div class="step-desc">
+            Click the <strong>⏺ circle button</strong> to start recording. Your browser will ask for microphone permission — click Allow.<br/><br/>
+            Speak your message. Click <strong>⏹</strong> to stop. Maximum 2 minutes.<br/><br/>
+            Click <strong>▶ Play</strong> to hear it back before sending. Click <strong>✕</strong> to delete and re-record.<br/><br/>
+            The voice recording is encoded into the URL so it travels with the link.
+          </div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">4</div>
+        <div class="step-body">
+          <div class="step-title">Set number of candles</div>
+          <div class="step-desc">Tap <strong>−</strong> or <strong>+</strong> to set 1–14 candles on the birthday cake. Matching the person's age is a nice touch.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Step 3 of 4 — Memories & atmosphere</h3>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">Upload memory photos (optional)</div>
+          <div class="step-desc">
+            Click the upload zone to open a file picker. Select multiple photos at once using Ctrl+Click or Cmd+Click.<br/><br/>
+            Photos are automatically compressed to max 480px and JPEG quality 72% to keep the URL manageable. Thumbnail previews appear below.<br/><br/>
+            <strong>Recommended: 3–6 photos.</strong> More than 8 may make the URL too long for some email clients. A warning appears if photos exceed 800KB combined.
+          </div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">Choose an atmosphere theme</div>
+          <div class="step-desc">Six options: Midnight (dark gold), Golden Hour (warm amber), Aurora (teal/purple), Cherry Blossom (rose/pink), Deep Ocean (blue), Cosmos (purple/orange). This changes the ambient glow colour throughout the experience.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Step 4 of 4 — Review & send</h3>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">Review the envelope preview</div>
+          <div class="step-desc">Shows the birthday person's name, a preview of the letter, candle count, theme, photo count, voice status, and all recipient emails. Check everything looks right.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">Optionally customise the email subject</div>
+          <div class="step-desc">Default: "A birthday experience is waiting for you, [Name] 🎂". Change it to anything you like.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <div class="step-title">Click ✦ Send the Experience</div>
+          <div class="step-desc">
+            If deployed on Netlify with Resend configured: email sends automatically to all recipients. You'll see <strong>"✅ Sent to X recipients!"</strong> on the success screen.<br/><br/>
+            If running locally: shows Gmail and Mail App buttons for manual sending.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Success screen — what you can do</h3>
+    <table class="tbl">
+      <thead><tr><th>Action</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td>Copy link</td><td>Copies the experience URL to clipboard. Paste it anywhere — WhatsApp, iMessage, Messenger.</td></tr>
+        <tr><td>Open in Gmail</td><td>Opens Gmail compose pre-filled with email, subject, body and link for each recipient.</td></tr>
+        <tr><td>Mail App</td><td>Opens your default desktop/phone mail app with everything pre-filled.</td></tr>
+        <tr><td>Open Birthday Experience</td><td>Shows an inline preview of exactly what the birthday person will see. Loads the full experience.</td></tr>
+        <tr><td>Delivery tracker</td><td>Shows sent/opened status per recipient. Click "↻ Refresh" to check for new opens.</td></tr>
+        <tr><td>QR code</td><td>Canvas-drawn QR code you can print on a physical birthday card. Click "↓ Download QR" to save as PNG.</td></tr>
+        <tr><td>← Create another</td><td>Resets the entire form so you can create a new experience.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ SECTION 4: RECEIVER ═══ -->
+  <section id="receiver">
+    <p class="section-eyebrow">Section 4</p>
+    <h2>Receiver — <em>full walkthrough</em></h2>
+    <p>You are the receiver if you got an email with a birthday experience link. Here is everything you'll see and do.</p>
+
+    <h3>Opening the email</h3>
+    <p>You'll receive an email with the subject something like <em>"A birthday experience is waiting for you, [Your Name] 🎂"</em>. Open it on any device — phone, laptop, tablet.</p>
+    <p>Inside the email is a gold button: <strong>"✦ Open Your Birthday Experience"</strong>. Click it. Best on a laptop or desktop for hand tracking, but the full experience works on mobile too (just click candles instead).</p>
+
+    <h3>The curtain intro</h3>
+    <p>The page opens with a full-screen black curtain showing your name in large letters with a gentle gold glow. Floating hearts drift upward. A gold line expands across the screen.</p>
+    <p>Click the <strong>"Open Your Experience ✦"</strong> button when you're ready. This is intentional — it gives you a moment to prepare before the party begins.</p>
+
+    <h3>The birthday experience</h3>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-n blue">1</div>
+        <div class="step-body">
+          <div class="step-title">Allow camera access</div>
+          <div class="step-desc">Your browser will ask for camera permission. Click <strong>Allow</strong>. The camera is used only for hand tracking — it runs entirely in your browser. Nothing is recorded or uploaded anywhere.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n blue">2</div>
+        <div class="step-body">
+          <div class="step-title">Light the candles with your finger</div>
+          <div class="step-desc">
+            Look at the camera panel on the left. You'll see your live camera feed with a gold skeleton overlay on your hand.<br/><br/>
+            Point your <strong>index finger</strong> (the one you use to point at things) at a candle on the cake. Move it slowly. When your fingertip gets close to a candle wick, it lights automatically with a sound.<br/><br/>
+            Tip: move slowly and keep your hand 30–60cm from the camera. Good lighting helps.
+          </div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n blue">3</div>
+        <div class="step-body">
+          <div class="step-title">Blow out candles (optional)</div>
+          <div class="step-desc">Hold your <strong>open palm</strong> flat, facing the camera with all 4 fingers fully extended. The "Blowing 〰" badge appears and all candles go out with a whoosh sound. Then you can light them again.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n blue">4</div>
+        <div class="step-body">
+          <div class="step-title">Light ALL candles to reveal your wish</div>
+          <div class="step-desc">When the counter at the bottom of the cake shows all candles lit (e.g. "5 / 5"), your personalised birthday wish appears in a glowing card with confetti and music. This is the moment.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n blue">5</div>
+        <div class="step-body">
+          <div class="step-title">Explore the rest of the experience</div>
+          <div class="step-desc">
+            Scroll down to find:<br/>
+            <ul>
+              <li><strong>Age panel</strong> — how many days you've lived, countdown to next birthday</li>
+              <li><strong>Letter</strong> — the heartfelt message from the sender in italic serif</li>
+              <li><strong>Voice message</strong> — click ▶ to hear the sender's voice</li>
+              <li><strong>Memory slideshow</strong> — photos with cinematic Ken Burns zoom effects and sparkles</li>
+              <li><strong>Capture moments</strong> — click ⊙ to take selfies that appear as polaroids</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n blue">6</div>
+        <div class="step-body">
+          <div class="step-title">Send a thank-you response (optional)</div>
+          <div class="step-desc">At the bottom of the page, a "Send a Thank You 💛" panel appears. Choose an emoji reaction and optionally write a short note. Click Send. This is optional — the experience works perfectly if you skip it.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n blue">7</div>
+        <div class="step-body">
+          <div class="step-title">Save a screenshot keepsake</div>
+          <div class="step-desc">Click <strong>"↓ Save Keepsake"</strong> at the top right. This downloads a high-resolution PNG of your entire birthday experience page as a memory.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Controls reference</h3>
+    <table class="tbl">
+      <thead><tr><th>Button</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td>📷 Camera On / Off</td><td>Toggle the camera below the camera panel. When off, click candles directly to light them.</td></tr>
+        <tr><td>♪ Music</td><td>Toggle the synthesised Happy Birthday melody (Web Audio — no files loaded).</td></tr>
+        <tr><td>✦ Confetti</td><td>Fires a burst of 90 coloured confetti pieces.</td></tr>
+        <tr><td>⊙ Capture</td><td>Takes a snapshot from your webcam and adds it as a rotating polaroid card.</td></tr>
+        <tr><td>↓ Save Keepsake</td><td>Downloads the full party page as a PNG image at 1.8× resolution.</td></tr>
+        <tr><td>Reset</td><td>Extinguishes all candles so you can light them again.</td></tr>
+        <tr><td>+ Candle</td><td>Adds one more candle to the cake (up to 14 total).</td></tr>
+        <tr><td>▶ / ⏸ Autoplay</td><td>Starts or stops the memory slideshow auto-advancing every 5 seconds.</td></tr>
+        <tr><td>‹ ›</td><td>Navigate manually between photos in the slideshow.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ SECTION 5: DASHBOARD ═══ -->
+  <section id="dashboard">
+    <p class="section-eyebrow">Section 5</p>
+    <h2>Dashboard <em>guide</em></h2>
+    <p>Click the <strong>◈ Dashboard</strong> tab in send.html to see all your past birthday experiences.</p>
+
+    <h3>Statistics</h3>
+    <table class="tbl">
+      <thead><tr><th>Stat</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td>Experiences sent</td><td>Number of distinct birthday experiences you've created</td></tr>
+        <tr><td>Total recipients</td><td>Total number of people you've sent experiences to</td></tr>
+        <tr><td>Links opened</td><td>How many recipients have opened their experience link</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Wish history</h3>
+    <p>Each experience you've sent appears as a card showing:</p>
+    <ul style="font-size:0.9rem;color:var(--tx-2);padding-left:1.2rem;line-height:2;margin-bottom:1rem">
+      <li>Birthday person's name</li>
+      <li>Number of recipients and date sent</li>
+      <li>How many have opened it (e.g. "2/3 opened")</li>
+      <li>Per-recipient status: Pending, ✓ Sent, or ✦ Opened</li>
+    </ul>
+
+    <h3>Delivery status explained</h3>
+    <table class="tbl">
+      <thead><tr><th>Status</th><th>Meaning</th><th>How it's set</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill pill-r">Pending</span></td><td>Not yet sent or confirmed</td><td>Default state before sending</td></tr>
+        <tr><td><span class="pill pill-g">✓ Sent</span></td><td>Email confirmed sent</td><td>Resend API confirmed OR "Mark sent" clicked manually</td></tr>
+        <tr><td><span class="pill pill-gold">✦ Opened</span></td><td>Recipient opened the link</td><td>experience.html records timestamp automatically on open</td></tr>
+      </tbody>
+    </table>
+
+    <div class="box box-gold">
+      <p><strong>Note on "Opened" tracking:</strong> This works automatically when the recipient opens the experience on a browser that shares localStorage with where you sent from (same device/browser). For cross-device tracking, the deployed version with server-side tracking is needed.</p>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 6: HAND TRACKING ═══ -->
+  <section id="handtracking">
+    <p class="section-eyebrow">Section 6</p>
+    <h2>Hand tracking <em>guide</em></h2>
+
+    <h3>How it works</h3>
+    <p>Luminary uses <strong>MediaPipe Hands</strong> — Google's on-device AI model that detects 21 points on your hand in real-time. Everything runs in your browser. Your camera feed is never sent to any server.</p>
+
+    <h3>Lighting candles</h3>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-n green">✓</div>
+        <div class="step-body">
+          <div class="step-title">Point your index finger at a candle</div>
+          <div class="step-desc">Keep your other fingers curled. Move slowly. When the gold fingertip dot (shown on the cake) comes within 27px of a candle wick, it lights automatically.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Blowing out candles</h3>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-n green">✓</div>
+        <div class="step-body">
+          <div class="step-title">Open palm, all 4 fingers extended</div>
+          <div class="step-desc">Hold your hand flat like you're pressing it against a wall. All four fingers (index, middle, ring, pinky) must be above their knuckles. The "Blowing 〰" badge appears and all candles extinguish.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Tips for best results</h3>
+    <table class="tbl">
+      <thead><tr><th>Problem</th><th>Solution</th></tr></thead>
+      <tbody>
+        <tr><td>Hand not detected</td><td>Improve lighting. Ensure your hand contrasts with the background.</td></tr>
+        <tr><td>Candle won't light</td><td>Move your finger more slowly. Keep your hand 30–60cm from camera.</td></tr>
+        <tr><td>Wrong finger lighting candles</td><td>Curl all other fingers. Only the index fingertip (landmark 8) triggers lighting.</td></tr>
+        <tr><td>Blow not working</td><td>Extend all 4 fingers completely. Don't just wave — hold them extended.</td></tr>
+        <tr><td>Camera shows black</td><td>Check browser permissions. Click the camera icon in the address bar → Allow.</td></tr>
+        <tr><td>Camera works on phone but not laptop</td><td>Some laptops block camera under <code>http://</code>. Needs <code>https://</code> — deploy to Netlify.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ SECTION 7: LOCAL ═══ -->
+  <section id="local">
+    <p class="section-eyebrow">Section 7</p>
+    <h2>Running <em>locally</em></h2>
+    <p>Running locally means opening the files on your own computer without deploying anywhere. This is fine for building and previewing — but the experience link will show <code>127.0.0.1</code> and won't work for recipients.</p>
+
+    <div class="compare-grid">
+      <div class="compare-card local">
+        <div class="compare-title">What works locally</div>
+        <div class="compare-item"><span class="ci">✅</span>Form fills and validates correctly</div>
+        <div class="compare-item"><span class="ci">✅</span>Preview experience (inline iframe)</div>
+        <div class="compare-item"><span class="ci">✅</span>Voice recording and playback</div>
+        <div class="compare-item"><span class="ci">✅</span>Photo upload and compression</div>
+        <div class="compare-item"><span class="ci">✅</span>Dashboard and tracking UI</div>
+        <div class="compare-item"><span class="ci">✅</span>Camera on localhost (most browsers)</div>
+        <div class="compare-item"><span class="ci">❌</span>Link works for recipient</div>
+        <div class="compare-item"><span class="ci">❌</span>Automatic email sending</div>
+      </div>
+      <div class="compare-card prod">
+        <div class="compare-title">What works after deployment</div>
+        <div class="compare-item"><span class="ci">✅</span>Everything above</div>
+        <div class="compare-item"><span class="ci">✅</span>Link works for anyone worldwide</div>
+        <div class="compare-item"><span class="ci">✅</span>Emails send automatically</div>
+        <div class="compare-item"><span class="ci">✅</span>Camera on all browsers (HTTPS)</div>
+        <div class="compare-item"><span class="ci">✅</span>Beautiful branded email template</div>
+        <div class="compare-item"><span class="ci">✅</span>Multiple recipients at once</div>
+      </div>
+    </div>
+
+    <h3>Method A — Double-click (simplest)</h3>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">Put both HTML files in the same folder</div>
+          <div class="step-desc"><code>send.html</code> and <code>experience.html</code> must be in the same folder. The preview function uses a relative path to load <code>experience.html</code>.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">Double-click send.html</div>
+          <div class="step-desc">Opens in your default browser at a <code>file://</code> address. Fill the form and use the inline preview to see the experience. Note: camera may be blocked on some browsers under <code>file://</code>.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Method B — Local server (recommended for full features)</h3>
+    <p>A local server gives you <code>http://localhost</code> instead of <code>file://</code>. Camera works reliably. Preview works perfectly.</p>
+
+    <h4>Option 1: VS Code Live Server (easiest)</h4>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">Install VS Code + Live Server extension</div>
+          <div class="step-desc">Download <a href="https://code.visualstudio.com" target="_blank">VS Code</a>. Open Extensions (Ctrl+Shift+X). Search "Live Server" by Ritwick Dey. Install.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">Open the folder in VS Code</div>
+          <div class="step-desc">File → Open Folder → select your luminary folder.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <div class="step-title">Right-click send.html → Open with Live Server</div>
+          <div class="step-desc">Browser opens at <code>http://127.0.0.1:5500/send.html</code>. Everything works including camera.</div>
+        </div>
+      </div>
+    </div>
+
+    <h4>Option 2: Python (built into most computers)</h4>
+    <div class="codeblock"><span class="cm"># Open terminal, navigate to your luminary folder</span>
+<span class="h">cd</span> path/to/luminary-prod/public
+
+<span class="cm"># Start local server</span>
+<span class="h">python3</span> -m http.server 8080
+
+<span class="cm"># Open in browser:</span>
+<span class="s">http://localhost:8080/send.html</span></div>
+
+    <h4>Option 3: Node.js serve</h4>
+    <div class="codeblock"><span class="cm"># Install serve (one-time)</span>
+<span class="h">npm</span> install -g serve
+
+<span class="cm"># Run from your public/ folder</span>
+<span class="h">serve</span> .
+
+<span class="cm"># Opens at:</span>
+<span class="s">http://localhost:3000/send.html</span></div>
+
+    <div class="box box-gold">
+      <p><strong>Reminder:</strong> However you run it locally, the experience link will always show your local address (<code>127.0.0.1</code> or <code>localhost</code>). That link only works on your computer. To share with a real recipient, deploy to Netlify (Section 8).</p>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 8: DEPLOY ═══ -->
+  <section id="deploy">
+    <p class="section-eyebrow">Section 8</p>
+    <h2>Deploying <em>online</em></h2>
+    <p>Deployment means putting the files on a public server so anyone can access them. Takes 5 minutes. Free.</p>
+
+    <h3>Deploy to Netlify (recommended)</h3>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">Create a free Netlify account</div>
+          <div class="step-desc">Go to <a href="https://netlify.com" target="_blank">netlify.com</a> → Sign up. Free forever, no credit card.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">Go to the deploy page</div>
+          <div class="step-desc">Go to <a href="https://app.netlify.com/drop" target="_blank">app.netlify.com/drop</a> or click "Add new site" → "Deploy manually" in the Netlify dashboard.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <div class="step-title">Drag the luminary-prod folder onto the drop zone</div>
+          <div class="step-desc">Drag the entire <code>luminary-prod</code> folder (which contains <code>netlify.toml</code>, <code>public/</code>, and <code>netlify/</code>) onto the Netlify drop zone. Wait ~20 seconds.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">4</div>
+        <div class="step-body">
+          <div class="step-title">You're live!</div>
+          <div class="step-desc">Netlify gives you a URL like <code>https://luminous-abc123.netlify.app</code>. Open <code>https://your-site.netlify.app/send.html</code> — it works. Share the experience links and they work for anyone.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Other free deployment options</h3>
+    <table class="tbl">
+      <thead><tr><th>Service</th><th>How to deploy</th><th>Automatic emails?</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Netlify</strong> (recommended)</td><td>Drag folder to app.netlify.com/drop</td><td><span class="pill pill-g">Yes — with Netlify Functions</span></td></tr>
+        <tr><td><strong>Vercel</strong></td><td><code>npm i -g vercel && vercel --prod</code></td><td><span class="pill pill-g">Yes — as Vercel Functions</span></td></tr>
+        <tr><td><strong>GitHub Pages</strong></td><td>Push to repo → Settings → Pages</td><td><span class="pill pill-r">No — static only</span></td></tr>
+        <tr><td><strong>Cloudflare Pages</strong></td><td>Connect repo or drag to Cloudflare dashboard</td><td><span class="pill pill-gold">Partial — Cloudflare Workers needed</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ SECTION 9: EMAIL ═══ -->
+  <section id="email-setup">
+    <p class="section-eyebrow">Section 9</p>
+    <h2>Email setup <em>(Resend)</em></h2>
+    <p>Without this setup, clicking Send shows Gmail/Mail app buttons. With this setup, emails go out automatically the moment you click Send.</p>
+
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-n">1</div>
+        <div class="step-body">
+          <div class="step-title">Sign up at resend.com</div>
+          <div class="step-desc"><a href="https://resend.com" target="_blank">resend.com</a> → Sign up free. 3,000 emails/month free. No credit card.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">2</div>
+        <div class="step-body">
+          <div class="step-title">Get your API key</div>
+          <div class="step-desc">Resend dashboard → API Keys → Create API Key → name it "Luminary" → Copy the key (looks like <code>re_aBcDeFgH_...</code>). Save it — shown only once.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">3</div>
+        <div class="step-body">
+          <div class="step-title">Add environment variables in Netlify</div>
+          <div class="step-desc">
+            Netlify dashboard → your site → Site configuration → Environment variables → Add a variable:<br/><br/>
+            <code>RESEND_API_KEY</code> = <em>your key from step 2</em><br/>
+            <code>FROM_EMAIL</code> = <code>Luminary &lt;onboarding@resend.dev&gt;</code> (no domain setup) or <code>Luminary &lt;birthday@yourdomain.com&gt;</code> (with domain)
+          </div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">4</div>
+        <div class="step-body">
+          <div class="step-title">Redeploy Netlify</div>
+          <div class="step-desc">Netlify dashboard → Deploys → Trigger deploy → Deploy site. Environment variables only activate after a fresh deploy.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-n">5</div>
+        <div class="step-body">
+          <div class="step-title">Test with your own email</div>
+          <div class="step-desc">Create an experience with your own email as recipient. Click Send. Check your inbox. Should arrive within seconds.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECTION 10: FAQ ═══ -->
+  <section id="faq">
+    <p class="section-eyebrow">Section 10</p>
+    <h2>FAQ & <em>troubleshooting</em></h2>
+
+    <h3>The Continue button doesn't work</h3>
+    <p>Make sure: (1) the birthday person's <strong>name</strong> is filled in, (2) you've added at least one recipient email by clicking <strong>+ Add</strong>. If you typed an email but didn't click Add, clicking Continue will auto-add it. Red error messages appear below each problem field.</p>
+
+    <h3>The link shows 127.0.0.1 — recipient can't open it</h3>
+    <p>You're running the app locally. The link only works on your own computer. Deploy to Netlify (Section 8) to get a real shareable link. A yellow warning banner appears on the success screen when this is the case.</p>
+
+    <h3>Email not sending automatically</h3>
+    <p>This requires Netlify deployment + Resend API key configured (Section 9). On localhost, the app falls back to Gmail/Mail App buttons. After deployment with Resend, it's fully automatic.</p>
+
+    <h3>Camera not working</h3>
+    <p>Check: (1) Did you click Allow when the browser asked for camera permission? Look for a camera icon in the address bar. (2) Are you on <code>https://</code>? Camera is blocked on <code>file://</code> and sometimes <code>http://</code>. Deploying to Netlify solves this. (3) Try Chrome or Edge — they have the best MediaPipe support.</p>
+
+    <h3>Candles won't light from my finger</h3>
+    <p>Move your index finger more slowly. The detection runs at 30fps so very fast movements are missed. Keep 30–60cm distance. Good lighting matters — try near a window or a lamp.</p>
+
+    <h3>Photos not appearing in the experience</h3>
+    <p>Too many/large photos can make the URL too long. Stick to 3–6 photos. A warning banner appears in Step 3 if photos exceed 800KB combined. Delete some thumbnails and try again.</p>
+
+    <h3>Voice message not playing</h3>
+    <p>Voice is stored as <code>audio/webm</code>. Record using Chrome for broadest compatibility. On Safari, try recording a short test message first.</p>
+
+    <h3>How do I send to multiple people?</h3>
+    <p>In Step 1, add each email separately using the + Add button. All recipients receive the same experience link with the same personalisation. After sending, Gmail/Netlify sends to each one individually.</p>
+
+    <h3>Can the birthday person share the link?</h3>
+    <p>Yes. The link is completely portable. Anyone with the link can open the experience. You can also paste it into WhatsApp, Telegram, iMessage, or any messaging app.</p>
+
+    <h3>Is camera data stored anywhere?</h3>
+    <p>No. The camera feed is processed entirely in the browser by MediaPipe. Nothing is uploaded, stored, or transmitted. The camera is used only to detect hand landmarks in real-time.</p>
+
+    <h3>The experience link is very long — is that normal?</h3>
+    <p>Yes. All the personalisation data (letter, photos, voice, settings) is encoded directly into the URL. This is what makes it work without any server. The link can be up to 2MB long but works in all major browsers. WhatsApp and most email clients handle it fine.</p>
+  </section>
+
+  <div class="hr"></div>
+  <p style="text-align:center;font-size:0.82rem;color:var(--tx-3)">Luminary · Complete User Manual · Version 2.0 · July 2025</p>
+  <p style="text-align:center;font-size:0.82rem;color:var(--tx-3);margin-top:0.3rem">For deployment guide see <a href="DEPLOY.html">DEPLOY.html</a></p>
+
+</div>
+</body>
+</html>
