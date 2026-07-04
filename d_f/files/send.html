@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Luminary · Compose a Birthday Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04040a;--surface:#09090f;--surface2:#0f0f18;
+  --b1:rgba(255,255,255,0.05);--b2:rgba(255,255,255,0.10);--b3:rgba(255,255,255,0.18);
+  --gold:#c8a45a;--gold-lite:#e4c988;--gold-dim:rgba(200,164,90,0.13);--gold-glow:rgba(200,164,90,0.07);
+  --tx:#ede8df;--tx-2:rgba(237,232,223,0.60);--tx-3:rgba(237,232,223,0.35);
+  --danger:#e06e6e;--success:#6edfa0;
+  --radius:16px;--radius-sm:10px;--radius-xs:6px;--ease:cubic-bezier(0.4,0,0.2,1);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:'Outfit',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;cursor:none}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:9000;opacity:0.5}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes orb-drift{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,20px)}}
+@keyframes succ-pulse{0%,100%{box-shadow:0 0 0 0 rgba(200,164,90,0.35)}50%{box-shadow:0 0 0 20px rgba(200,164,90,0)}}
+@keyframes rec-pulse{0%,100%{box-shadow:0 0 0 0 rgba(224,100,100,0.4)}50%{box-shadow:0 0 0 10px rgba(224,100,100,0)}}
+@keyframes cf-fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(900deg);opacity:0}}
+
+/* CURSOR */
+#lum-cursor{position:fixed;width:8px;height:8px;border-radius:50%;background:var(--gold);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;transition:transform 0.1s}
+#lum-ring{position:fixed;width:32px;height:32px;border-radius:50%;border:1px solid rgba(200,164,90,0.4);pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
+.orb{position:fixed;border-radius:50%;filter:blur(130px);pointer-events:none;z-index:0;animation:orb-drift 18s ease-in-out infinite}
+.cp{position:fixed;pointer-events:none;z-index:800;border-radius:2px;animation:cf-fall linear forwards}
+
+/* LAYOUT */
+.wrap{position:relative;z-index:1;display:grid;grid-template-columns:420px 1fr;min-height:100vh;max-width:1300px;margin:0 auto}
+@media(max-width:960px){.wrap{grid-template-columns:1fr}}
+
+/* LEFT */
+.left{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:3rem;border-right:1px solid var(--b1);overflow:hidden}
+@media(max-width:960px){.left{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--b1);padding:2rem}}
+.left-orb{position:absolute;width:500px;height:500px;border-radius:50%;filter:blur(120px);pointer-events:none;bottom:-180px;right:-180px;background:radial-gradient(circle,rgba(200,164,90,0.08) 0%,transparent 70%);animation:orb-drift 22s ease-in-out infinite}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-icon{width:36px;height:36px;border-radius:50%;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:var(--gold)}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;letter-spacing:0.25em;color:var(--gold);text-transform:uppercase}
+.hero{flex:1;display:flex;flex-direction:column;justify-content:center;padding:2.5rem 0}
+.eyebrow{font-size:0.82rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--gold);display:inline-block}
+.hero-h{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,4.5vw,5rem);font-weight:300;line-height:0.92;letter-spacing:-0.02em;margin-bottom:2rem}
+.hero-h em{font-style:italic;color:var(--gold)}
+.hero-desc{font-size:1rem;color:var(--tx-2);line-height:1.8;max-width:360px;margin-bottom:2.5rem}
+.feat-list{display:flex;flex-direction:column;gap:0.85rem}
+.feat{display:flex;align-items:flex-start;gap:12px;font-size:0.95rem;color:var(--tx-2);line-height:1.55}
+.feat-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:6px;opacity:0.75}
+.left-foot{display:flex;align-items:center;gap:10px;font-size:0.85rem;color:var(--tx-3);margin-top:auto;padding-top:1.5rem}
+.left-foot::before{content:'';display:inline-block;width:28px;height:1px;background:var(--b2)}
+
+/* RIGHT */
+.right{padding:3rem 3.5rem;display:flex;flex-direction:column}
+@media(max-width:960px){.right{padding:2rem 1.5rem}}
+.form-header{margin-bottom:2rem}
+.form-header h2{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:400;margin-bottom:0.4rem}
+.form-header p{font-size:1rem;color:var(--tx-2);line-height:1.6}
+
+/* RAIL */
+.rail{display:flex;gap:6px;margin-bottom:2.5rem}
+.rail-seg{flex:1;height:3px;border-radius:2px;background:var(--b2);transition:background 0.4s}
+.rail-seg.done{background:rgba(200,164,90,0.35)}.rail-seg.active{background:var(--gold)}
+
+/* STEPS */
+.step{display:none;flex-direction:column;gap:1.5rem;animation:fadeUp 0.35s var(--ease) forwards}
+.step.active{display:flex}
+.step-meta{font-size:0.88rem;color:var(--tx-3);letter-spacing:0.05em}
+.step-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400;margin-top:0.2rem}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:580px){.two-col{grid-template-columns:1fr}}
+
+/* FIELDS */
+.field{display:flex;flex-direction:column;gap:0.5rem}
+.field-label{font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx-3)}
+.field-input{background:var(--surface2);border:1px solid var(--b2);border-radius:var(--radius-sm);padding:0.9rem 1.1rem;color:var(--tx);font-family:'Outfit',sans-serif;font-size:1rem;font-weight:300;outline:none;width:100%;transition:border-color 0.25s,box-shadow 0.25s}
+.field-input:focus{border-color:rgba(200,164,90,0.6);box-shadow:0 0 0 3px rgba(200,164,90,0.08)}
+.field-input::placeholder{color:var(--tx-3)}
+.field-input.err{border-color:rgba(224,100,100,0.7)}
+textarea.field-input{resize:vertical;min-height:110px;line-height:1.7}
+select.field-input{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(237,232,223,0.4)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem}
+.field-hint{font-size:0.88rem;color:var(--tx-3)}
+.field-err{font-size:0.88rem;color:#e06e6e;display:none}.field-err.show{display:block}
+
+/* RECIPIENTS */
+.add-recip-row{display:flex;gap:0.6rem}
+.add-recip-row .field-input{flex:1}
+.btn-add{background:var(--gold-dim);border:1px solid rgba(200,164,90,0.3);color:var(--gold);padding:0.7rem 1.4rem;border-radius:var(--radius-sm);cursor:pointer;font-family:'Outfit',sans-serif;font-size:1rem;white-space:nowrap;transition:all 0.2s}
+.btn-add:hover{background:rgba(200,164,90,0.25)}
+.recipient-list{display:flex;flex-direction:column;gap:0.5rem;margin-top:0.6rem}
+.recip-row{display:flex;align-items:center;gap:0.8rem;background:var(--surface2);border:1px solid var(--b2);border-radius:var(--radius-sm);padding:0.65rem 1rem}
+.recip-email{flex:1;font-size:0.95rem;color:var(--tx)}
+.recip-del{background:none;border:none;color:var(--tx-3);cursor:pointer;font-size:1rem;padding:2px 6px;border-radius:4px;transition:color 0.2s;line-height:1}
+.recip-del:hover{color:var(--danger)}
+.recip-count{font-size:0.82rem;color:var(--gold);margin-top:0.4rem}
+
+/* STEPPER */
+.stepper{display:flex;align-items:center;gap:1.2rem}
+.stp-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--b2);background:var(--surface2);color:var(--tx);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s,color 0.2s}
+.stp-btn:hover{border-color:var(--gold);color:var(--gold)}
+.stp-val{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--gold);min-width:52px;text-align:center;line-height:1}
+.stp-hint{font-size:0.92rem;color:var(--tx-3)}
+
+/* THEME */
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.7rem}
+.theme-tile{border:1px solid var(--b2);border-radius:var(--radius-sm);padding:1rem 0.5rem;text-align:center;cursor:pointer;transition:all 0.22s;background:var(--surface2)}
+.theme-tile:hover{border-color:var(--b3);transform:translateY(-2px)}.theme-tile.sel{border-color:var(--gold);background:var(--gold-dim)}
+.ti{font-size:1.5rem;margin-bottom:0.35rem}.tn{font-size:0.88rem;color:var(--tx-2)}
+
+/* UPLOAD */
+.upload-zone{border:1px dashed var(--b2);border-radius:var(--radius);padding:1.8rem;text-align:center;cursor:pointer;transition:all 0.22s;background:var(--surface2)}
+.upload-zone:hover{border-color:rgba(200,164,90,0.5);background:var(--gold-glow)}
+.ui{font-size:1.8rem;margin-bottom:0.5rem;opacity:0.5}.upload-zone p{font-size:0.95rem;color:var(--tx-3)}
+.thumb-strip{display:flex;gap:8px;flex-wrap:wrap;margin-top:0.9rem}
+.tw{position:relative;display:inline-block}
+.thumb{width:58px;height:58px;object-fit:cover;border-radius:var(--radius-xs);border:1px solid var(--b2);display:block}
+.tdel{position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:var(--danger);border-radius:50%;font-size:0.6rem;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none}
+.size-warn{font-size:0.9rem;color:#BA7517;padding:8px 12px;border:1px solid rgba(186,117,23,0.3);border-radius:var(--radius-xs);background:rgba(186,117,23,0.08);display:none;margin-top:8px}.size-warn.show{display:block}
+
+/* VOICE */
+.voice-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.rec-ring{width:50px;height:50px;border-radius:50%;border:1px solid var(--b2);background:var(--surface2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.25s;font-size:1.1rem;flex-shrink:0}
+.rec-ring:hover{border-color:var(--gold);background:var(--gold-dim)}
+.rec-ring.recording{border-color:#e06e6e;background:rgba(224,100,100,0.1);animation:rec-pulse 1.2s ease infinite}
+.rec-ring.has-audio{border-color:var(--gold);color:var(--gold)}
+.rec-bars{display:flex;gap:3px;align-items:flex-end;height:30px}
+.rb{width:3px;border-radius:2px;background:var(--b2);transition:height 0.12s}
+.rec-status{font-size:0.92rem;color:var(--tx-3)}.rec-timer{color:#e06e6e;font-weight:500}
+
+/* ENVELOPE */
+.envelope{background:var(--surface2);border:1px solid var(--b2);border-radius:var(--radius);padding:1.5rem}
+.env-lbl{font-size:0.78rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--tx-3);margin-bottom:0.4rem}
+.env-name{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400;margin-bottom:0.6rem}
+.env-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--tx-2);line-height:1.7}
+.env-tags{display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--b1)}
+.env-tag{font-size:0.85rem;color:var(--tx-3);padding:4px 12px;border:1px solid var(--b1);border-radius:50px}
+
+/* BUTTONS */
+.form-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--b1)}
+.btn-back{background:none;border:1px solid var(--b2);color:var(--tx-2);padding:0.75rem 1.6rem;border-radius:50px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:1rem;transition:all 0.2s}
+.btn-back:hover{border-color:var(--b3);color:var(--tx)}
+.btn-next{background:var(--gold);color:#04030a;border:none;padding:0.85rem 2.4rem;border-radius:50px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:500;letter-spacing:0.04em;transition:all 0.25s;display:flex;align-items:center;gap:8px;box-shadow:0 0 30px rgba(200,164,90,0.2)}
+.btn-next:hover{background:var(--gold-lite);transform:translateY(-1px);box-shadow:0 8px 28px rgba(200,164,90,0.35)}
+.btn-send{background:linear-gradient(120deg,var(--gold),var(--gold-lite));color:#04030a;border:none;padding:0.95rem 2.8rem;border-radius:50px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:1.05rem;font-weight:500;letter-spacing:0.04em;display:flex;align-items:center;gap:10px;box-shadow:0 0 40px rgba(200,164,90,0.2);transition:all 0.25s;width:100%;justify-content:center}
+.btn-send:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(200,164,90,0.35)}
+.btn-outline{background:none;border:1px solid var(--b2);color:var(--tx);padding:0.85rem 1.6rem;border-radius:50px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:1rem;transition:all 0.2s;width:100%;justify-content:center;display:flex;align-items:center;gap:8px}
+.btn-outline:hover{border-color:var(--b3);background:rgba(255,255,255,0.04)}
+.btn-sm{background:rgba(255,255,255,0.05);border:1px solid var(--b2);color:var(--tx-2);padding:0.55rem 1.1rem;border-radius:50px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:0.92rem;transition:all 0.2s}
+.btn-sm:hover{border-color:var(--b3);color:var(--tx)}
+
+/* SUCCESS */
+#success{display:none;flex-direction:column;align-items:center;gap:1.4rem;padding:1.5rem 0;animation:fadeUp 0.6s var(--ease) forwards}
+.succ-ring{width:80px;height:80px;border-radius:50%;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--gold);animation:succ-pulse 2.5s ease infinite}
+.succ-h{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300}
+.step-box{width:100%;max-width:580px;background:var(--surface2);border:1px solid var(--b2);border-radius:var(--radius);padding:1.2rem 1.4rem}
+.step-box-label{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem;display:flex;align-items:center;gap:8px}
+.step-box-label::before{content:'';display:inline-block;width:12px;height:1px;background:var(--gold)}
+.url-box{display:flex;align-items:center;gap:0.8rem;background:var(--bg);border:1px solid var(--b1);border-radius:var(--radius-sm);padding:0.8rem 1rem}
+.url-txt{flex:1;font-size:0.82rem;color:var(--tx-3);font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.url-copy{font-size:0.92rem;color:var(--gold);cursor:pointer;background:none;border:none;white-space:nowrap;flex-shrink:0}
+.url-copy:hover{text-decoration:underline}
+.send-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.7rem}
+@media(max-width:500px){.send-grid{grid-template-columns:1fr}}
+.deploy-warn{background:rgba(186,117,23,0.1);border:1px solid rgba(186,117,23,0.35);border-radius:var(--radius-sm);padding:1rem 1.2rem;font-size:0.9rem;color:#e4c070;line-height:1.7;width:100%;max-width:580px}
+.deploy-warn strong{color:#f5d070;display:block;margin-bottom:0.3rem}
+
+/* TRACKING */
+.track-row{display:flex;align-items:center;gap:0.8rem;padding:0.7rem 0;border-bottom:1px solid var(--b1)}
+.track-row:last-child{border-bottom:none}
+.track-email{flex:1;font-size:0.92rem;color:var(--tx)}
+.track-status{font-size:0.78rem;padding:3px 10px;border-radius:50px;border:1px solid;white-space:nowrap}
+.ts-sent{color:#6edfa0;border-color:rgba(110,223,160,0.3);background:rgba(110,223,160,0.08)}
+.ts-pending{color:var(--tx-3);border-color:var(--b1)}
+.ts-opened{color:var(--gold);border-color:rgba(200,164,90,0.3);background:var(--gold-dim)}
+.track-time{font-size:0.75rem;color:var(--tx-3)}
+
+/* DASHBOARD */
+#dashboard{display:none;flex-direction:column;gap:1.2rem;padding:1rem 0;animation:fadeUp 0.5s var(--ease) forwards}
+.dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem}
+.stat-card{background:var(--surface2);border:1px solid var(--b2);border-radius:var(--radius-sm);padding:1.2rem;text-align:center}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;color:var(--gold);line-height:1}
+.stat-lbl{font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--tx-3);margin-top:4px}
+.wish-history{display:flex;flex-direction:column;gap:0.6rem}
+.wish-card-item{background:var(--surface2);border:1px solid var(--b2);border-radius:var(--radius-sm);padding:1rem 1.2rem;display:flex;align-items:center;gap:1rem;cursor:pointer;transition:border-color 0.2s}
+.wish-card-item:hover{border-color:var(--b3)}
+.wc-name{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;flex:1}
+.wc-meta{font-size:0.78rem;color:var(--tx-3)}
+.wc-badge{font-size:0.72rem;padding:2px 8px;border-radius:50px;border:1px solid rgba(200,164,90,0.3);color:var(--gold);background:var(--gold-dim)}
+
+/* NAV TABS */
+.top-nav{display:flex;gap:0.5rem;margin-bottom:2rem}
+.nav-tab{background:none;border:1px solid var(--b1);color:var(--tx-3);padding:0.6rem 1.2rem;border-radius:50px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:0.88rem;transition:all 0.2s}
+.nav-tab:hover{border-color:var(--b2);color:var(--tx)}
+.nav-tab.active-tab{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
+
+.qr-section{display:flex;flex-direction:column;align-items:center;gap:0.6rem}
+.qr-note{font-size:0.88rem;color:var(--tx-3)}
+#preview-frame-wrap{display:none;width:100%;max-width:580px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--b2)}
+.preview-bar{font-size:0.78rem;color:var(--tx-3);padding:0.6rem 1rem;background:var(--surface2);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+#preview-frame{width:100%;height:600px;border:none;background:var(--bg)}
+</style>
+</head>
+<body>
+<div id="lum-cursor">&#10022;</div>
+<div id="lum-ring"></div>
+<div class="orb" style="width:700px;height:700px;top:-250px;right:-200px;background:radial-gradient(circle,rgba(200,164,90,0.09) 0%,transparent 70%)"></div>
+<div class="orb" style="width:500px;height:500px;bottom:-200px;left:-150px;background:radial-gradient(circle,rgba(110,90,200,0.07) 0%,transparent 70%);animation-delay:-9s"></div>
+<canvas id="lum-stars" style="position:fixed;inset:0;pointer-events:none;z-index:0"></canvas>
+
+<div class="wrap">
+  <!-- LEFT -->
+  <aside class="left">
+    <div class="left-orb"></div>
+    <div class="brand"><div class="brand-icon">✦</div><span class="brand-name">Luminary</span></div>
+    <div class="hero">
+      <p class="eyebrow">Birthday Experience Platform</p>
+      <h1 class="hero-h">Give them<br/>a moment<br/><em>to remember.</em></h1>
+      <p class="hero-desc">Craft a cinematic, interactive birthday. Candles lit by hand, music, memories, a personal letter. Send to multiple people at once and track who opens it.</p>
+      <div class="feat-list">
+        <div class="feat"><span class="feat-dot"></span>Hand-tracked candle lighting via MediaPipe AI</div>
+        <div class="feat"><span class="feat-dot"></span>Open-palm gesture blows all candles out</div>
+        <div class="feat"><span class="feat-dot"></span>Voice message, letter, cinematic slideshow</div>
+        <div class="feat"><span class="feat-dot"></span>Send to multiple recipients at once</div>
+        <div class="feat"><span class="feat-dot"></span>Track who received &amp; who opened</div>
+        <div class="feat"><span class="feat-dot"></span>Sender dashboard with wish history</div>
+      </div>
+    </div>
+    <div class="left-foot">You fill the form — they just open a link</div>
+  </aside>
+
+  <!-- RIGHT -->
+  <main class="right" id="main-right">
+
+    <!-- TOP NAV TABS -->
+    <div class="top-nav">
+      <button class="nav-tab active-tab" onclick="showView('compose')">✦ Compose</button>
+      <button class="nav-tab" onclick="showView('dashboard')">◈ Dashboard</button>
+    </div>
+
+    <!-- COMPOSE VIEW -->
+    <div id="compose-view">
+      <div class="form-header" id="form-header">
+        <h2>Compose the Experience</h2>
+        <p>You're the sender. The birthday person only opens a link — they see the magic.</p>
+      </div>
+      <div class="rail" id="rail">
+        <div class="rail-seg active" id="rs-0"></div>
+        <div class="rail-seg" id="rs-1"></div>
+        <div class="rail-seg" id="rs-2"></div>
+        <div class="rail-seg" id="rs-3"></div>
+      </div>
+
+      <!-- STEP 0 -->
+      <div class="step active" id="s-0">
+        <div><p class="step-meta">Step 1 of 4</p><h3 class="step-title">About the birthday person</h3></div>
+        <div class="two-col">
+          <div class="field">
+            <label class="field-label">Their name *</label>
+            <input class="field-input" id="f-name" type="text" placeholder="e.g. Zara"/>
+            <span class="field-err" id="err-name">Please enter their name</span>
+          </div>
+          <div class="field">
+            <label class="field-label">Their age</label>
+            <input class="field-input" id="f-age" type="number" placeholder="e.g. 28" min="1" max="120"/>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Birthday date (for countdown)</label>
+          <input class="field-input" id="f-bday" type="date"/>
+        </div>
+        <div class="field">
+          <label class="field-label">Recipients — add everyone who should receive this *</label>
+          <!-- FIX: typing + pressing Enter OR clicking Add both work; validation checks array length -->
+          <div class="add-recip-row">
+            <input class="field-input" id="new-email" type="email" placeholder="email@example.com"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();addRecipient();}"
+              oninput="clearRecipError()"/>
+            <button class="btn-add" onclick="addRecipient()">+ Add</button>
+          </div>
+          <span class="field-err" id="err-email">Add at least one recipient email then click + Add</span>
+          <div class="recipient-list" id="recip-list"></div>
+          <div class="recip-count" id="recip-count" style="display:none"></div>
+        </div>
+        <div class="field">
+          <label class="field-label">Wish language</label>
+          <select class="field-input" id="f-lang">
+            <option value="en">🇬🇧 English</option>
+            <option value="bn">🇧🇩 Bengali</option>
+            <option value="es">🇪🇸 Español</option>
+            <option value="ar">🇸🇦 العربية</option>
+            <option value="fr">🇫🇷 Français</option>
+          </select>
+        </div>
+        <div class="form-nav"><span></span><button class="btn-next" onclick="step0Next()">Continue →</button></div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="step" id="s-1">
+        <div><p class="step-meta">Step 2 of 4</p><h3 class="step-title">Your message to them</h3></div>
+        <div class="field"><label class="field-label">Your name (from)</label><input class="field-input" id="f-sender" type="text" placeholder="From…"/></div>
+        <div class="field"><label class="field-label">Heartfelt letter</label><textarea class="field-input" id="f-letter" placeholder="On this special day, I want you to know…"></textarea></div>
+        <div class="field">
+          <label class="field-label">Voice message (optional)</label>
+          <div class="voice-row">
+            <button class="rec-ring" id="rec-ring" onclick="toggleRec()">⏺</button>
+            <div>
+              <div class="rec-bars" id="rec-bars">
+                <div class="rb" style="height:5px"></div><div class="rb" style="height:10px"></div>
+                <div class="rb" style="height:6px"></div><div class="rb" style="height:14px"></div>
+                <div class="rb" style="height:8px"></div><div class="rb" style="height:18px"></div>
+                <div class="rb" style="height:6px"></div><div class="rb" style="height:12px"></div>
+              </div>
+              <div class="rec-status" id="rec-status">Click ⏺ to record a message</div>
+            </div>
+            <button class="btn-sm" id="btn-play" style="display:none" onclick="playRec()">▶ Play</button>
+            <button class="btn-sm" id="btn-del" style="display:none;color:#e06e6e" onclick="deleteRec()">✕</button>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Number of candles</label>
+          <div class="stepper">
+            <button class="stp-btn" onclick="adjC(-1)">−</button>
+            <span class="stp-val" id="c-val">5</span>
+            <button class="stp-btn" onclick="adjC(1)">+</button>
+            <span class="stp-hint">1 – 14</span>
+          </div>
+        </div>
+        <div class="form-nav"><button class="btn-back" onclick="goStep(0)">← Back</button><button class="btn-next" onclick="goStep(2)">Continue →</button></div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step" id="s-2">
+        <div><p class="step-meta">Step 3 of 4</p><h3 class="step-title">Memories &amp; atmosphere</h3></div>
+        <div class="field">
+          <label class="field-label">Memory photos (cinematic slideshow)</label>
+          <div class="upload-zone" onclick="document.getElementById('f-photos').click()">
+            <div class="ui">🖼</div><p>Click to add photos — displayed with Ken Burns effects &amp; particles</p>
+            <input id="f-photos" type="file" accept="image/*" multiple style="display:none" onchange="onPhotos(event)"/>
+          </div>
+          <div class="size-warn" id="size-warn">⚠ Photos are large. Use fewer or smaller images for reliable sharing.</div>
+          <div class="thumb-strip" id="thumbs"></div>
+        </div>
+        <div class="field">
+          <label class="field-label">Atmosphere theme</label>
+          <div class="theme-grid">
+            <div class="theme-tile sel" data-t="midnight" onclick="selTheme(this,'midnight')"><div class="ti">🌌</div><div class="tn">Midnight</div></div>
+            <div class="theme-tile" data-t="golden" onclick="selTheme(this,'golden')"><div class="ti">✨</div><div class="tn">Golden Hour</div></div>
+            <div class="theme-tile" data-t="aurora" onclick="selTheme(this,'aurora')"><div class="ti">🌈</div><div class="tn">Aurora</div></div>
+            <div class="theme-tile" data-t="cherry" onclick="selTheme(this,'cherry')"><div class="ti">🌸</div><div class="tn">Cherry Blossom</div></div>
+            <div class="theme-tile" data-t="ocean" onclick="selTheme(this,'ocean')"><div class="ti">🌊</div><div class="tn">Deep Ocean</div></div>
+            <div class="theme-tile" data-t="cosmos" onclick="selTheme(this,'cosmos')"><div class="ti">🪐</div><div class="tn">Cosmos</div></div>
+          </div>
+        </div>
+        <div class="form-nav"><button class="btn-back" onclick="goStep(1)">← Back</button><button class="btn-next" onclick="goStep(3)">Review →</button></div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step" id="s-3">
+        <div><p class="step-meta">Step 4 of 4</p><h3 class="step-title">Review &amp; send</h3></div>
+        <div class="envelope" id="env-preview"></div>
+        <div class="field"><label class="field-label">Email subject (optional)</label><input class="field-input" id="f-subj" type="text" placeholder="You have a birthday experience waiting… 🎂"/></div>
+        <div class="form-nav"><button class="btn-back" onclick="goStep(2)">← Back</button><button class="btn-send" onclick="sendExp()">✦ &nbsp;Send the Experience</button></div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div id="success">
+        <div class="succ-ring">✦</div>
+        <h2 class="succ-h">Experience ready!</h2>
+
+        <div class="deploy-warn" id="deploy-warn" style="display:none">
+          <strong>⚠ Running locally — link won't work for recipients</strong>
+          Deploy both HTML files to <a href="https://netlify.com/drop" target="_blank" style="color:#f5d070;font-weight:500">netlify.com/drop</a> (free, 30 sec) to get a real shareable URL. Then use that URL in the email.
+        </div>
+
+        <div class="step-box">
+          <p class="step-box-label">① Copy the experience link</p>
+          <div class="url-box">
+            <span class="url-txt" id="succ-url"></span>
+            <button class="url-copy" onclick="copyLink()">Copy</button>
+          </div>
+        </div>
+
+        <div class="step-box">
+          <p class="step-box-label">② Send to recipients</p>
+          <div id="send-recip-list" style="margin-bottom:0.8rem"></div>
+          <div class="send-grid">
+            <button class="btn-send" onclick="sendAllGmail()">📧 Open in Gmail</button>
+            <button class="btn-outline" onclick="sendAllMailto()">✉️ Mail App</button>
+          </div>
+          <p style="font-size:0.85rem;color:var(--tx-3);margin-top:0.6rem">Or paste the link above into WhatsApp, Messenger, or any chat.</p>
+        </div>
+
+        <div class="step-box">
+          <p class="step-box-label">③ Preview the experience</p>
+          <button class="btn-send" onclick="togglePreview()">✦ &nbsp;Open Birthday Experience →</button>
+          <p style="font-size:0.85rem;color:var(--tx-3);margin-top:0.6rem">See exactly what the birthday person will experience.</p>
+        </div>
+
+        <div id="preview-frame-wrap">
+          <div class="preview-bar">
+            <span>🎂 Birthday Experience Preview</span>
+            <button class="btn-sm" onclick="togglePreview()">✕ Close</button>
+          </div>
+          <iframe id="preview-frame" title="Preview" sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+
+        <div class="step-box">
+          <p class="step-box-label">④ Delivery tracker</p>
+          <div id="track-list"></div>
+          <div style="display:flex;gap:0.6rem;margin-top:0.8rem;flex-wrap:wrap">
+            <button class="btn-sm" onclick="renderTracking()">↻ Refresh</button>
+            <button class="btn-sm" onclick="clearTracking()" style="color:var(--danger)">✕ Clear history</button>
+          </div>
+        </div>
+
+        <div class="step-box">
+          <p class="step-box-label">⑤ QR code</p>
+          <div class="qr-section">
+            <canvas id="qr-canvas" width="140" height="140" style="border-radius:8px"></canvas>
+            <p class="qr-note">Scan or print for a birthday card</p>
+            <button class="btn-sm" onclick="downloadQR()">↓ Download QR</button>
+          </div>
+        </div>
+
+        <button class="btn-back" onclick="resetAll()" style="margin-top:0.5rem">← Create another experience</button>
+      </div>
+    </div><!-- /compose-view -->
+
+    <!-- DASHBOARD VIEW -->
+    <div id="dashboard" style="display:none">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin-bottom:0.4rem">Your Dashboard</h2>
+      <p style="font-size:1rem;color:var(--tx-2);margin-bottom:1.5rem">All your birthday experiences and their status.</p>
+
+      <div class="dash-stats" id="dash-stats">
+        <div class="stat-card"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl">Experiences sent</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-recipients">0</div><div class="stat-lbl">Total recipients</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-opened">0</div><div class="stat-lbl">Links opened</div></div>
+      </div>
+
+      <div style="margin-top:1.5rem;margin-bottom:0.8rem;display:flex;align-items:center;justify-content:space-between">
+        <p style="font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx-3)">Wish history</p>
+        <button class="btn-sm" onclick="loadDashboard()">↻ Refresh</button>
+      </div>
+      <div class="wish-history" id="wish-history">
+        <p style="font-size:0.92rem;color:var(--tx-3);padding:1rem 0">No experiences sent yet. Compose one to get started.</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  LUMINARY — SEND.HTML  (fully self-contained)
+//  FIX: recipient validation checks array, not input field
+// ═══════════════════════════════════════════════════════
+
+// ── Cursor ──
+(function(){
+  var c=document.getElementById('lum-cursor'),r=document.getElementById('lum-ring');
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;c.style.left=mx+'px';c.style.top=my+'px';});
+  (function t(){rx+=(mx-rx-16)*0.13;ry+=(my-ry-16)*0.13;r.style.left=rx+'px';r.style.top=ry+'px';requestAnimationFrame(t);})();
+})();
+
+// ── Starfield ──
+(function(){
+  var c=document.getElementById('lum-stars');if(!c)return;
+  c.width=window.innerWidth;c.height=window.innerHeight;
+  var cx=c.getContext('2d'),s=[];
+  for(var i=0;i<180;i++)s.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.2+0.2,a:Math.random(),d:Math.random()*0.005+0.002});
+  window.addEventListener('resize',function(){c.width=window.innerWidth;c.height=window.innerHeight;});
+  (function d(){cx.clearRect(0,0,c.width,c.height);s.forEach(function(p){p.a+=p.d;if(p.a>1||p.a<0)p.d*=-1;cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fillStyle='rgba(255,252,220,'+p.a*0.8+')';cx.fill();});requestAnimationFrame(d);})();
+})();
+
+// ── Confetti ──
+function shootConfetti(n){
+  var cols=['#c8a45a','#e4c988','#b0a0e8','#a0d0e8','#e0a0c0','#fff','#a0e8b4'];
+  for(var i=0;i<(n||80);i++){var d=document.createElement('div');d.className='cp';var sz=5+Math.random()*9;d.style.cssText='left:'+Math.random()*100+'vw;top:'+Math.random()*-14+'vh;background:'+cols[~~(Math.random()*cols.length)]+';width:'+sz+'px;height:'+sz+'px;border-radius:'+(Math.random()>.5?'50%':'2px')+';animation-duration:'+(2.2+Math.random()*3)+'s;animation-delay:'+Math.random()*0.7+'s';document.body.appendChild(d);d.addEventListener('animationend',function(){this.remove();});}
+}
+
+// ── Encode/decode ──
+function encodeData(obj){try{return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));}catch(e){var s=Object.assign({},obj,{photos:[],voice:null});return btoa(unescape(encodeURIComponent(JSON.stringify(s))));}}
+function decodeData(str){try{return JSON.parse(decodeURIComponent(escape(atob(str))));}catch(e){return null;}}
+
+// ── STATE ──
+var currentStep=0,candleCount=5,selThemeVal='midnight';
+var photos=[],voiceBlob=null,voiceDataURL=null;
+var mediaRec=null,recChunks=[],isRec=false,recInt=null,recSecs=0,barInt=null;
+var recipients=[]; // [{email, id, sentAt}]
+var builtURL='',previewOpen=false;
+
+// ── VIEW SWITCHING ──
+function showView(v){
+  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active-tab');});
+  event.target.classList.add('active-tab');
+  if(v==='compose'){
+    document.getElementById('compose-view').style.display='block';
+    document.getElementById('dashboard').style.display='none';
+  } else {
+    document.getElementById('compose-view').style.display='none';
+    document.getElementById('dashboard').style.display='flex';
+    loadDashboard();
+  }
+}
+
+// ── DASHBOARD ──
+function loadDashboard(){
+  var stored=JSON.parse(localStorage.getItem('lum_tracking')||'[]');
+  // Stats
+  var ids=Object.keys(stored.reduce(function(m,r){m[r.wishId||r.id]=1;return m;},{}));
+  document.getElementById('stat-total').textContent=ids.length||stored.filter(function(r,i,a){return a.findIndex(function(x){return (x.wishId||x.id)===(r.wishId||r.id);})==i;}).length;
+  document.getElementById('stat-recipients').textContent=stored.length;
+  document.getElementById('stat-opened').textContent=stored.filter(function(r){return r.openedAt;}).length;
+
+  // Wish history grouped by wishId
+  var groups={};
+  stored.forEach(function(r){var gid=r.wishId||r.id;if(!groups[gid])groups[gid]={name:r.name,sentAt:r.sentAt,recipients:[],wishId:gid};groups[gid].recipients.push(r);});
+  var hist=document.getElementById('wish-history');
+  var keys=Object.keys(groups);
+  if(!keys.length){hist.innerHTML='<p style="font-size:0.92rem;color:var(--tx-3);padding:1rem 0">No experiences sent yet.</p>';return;}
+  hist.innerHTML='';
+  keys.sort(function(a,b){return new Date(groups[b].sentAt)-new Date(groups[a].sentAt);});
+  keys.forEach(function(gid){
+    var g=groups[gid];
+    var opened=g.recipients.filter(function(r){return r.openedAt;}).length;
+    var div=document.createElement('div');div.className='wish-card-item';
+    div.innerHTML='<div style="flex:1"><div class="wc-name">'+g.name+'</div><div class="wc-meta">'+g.recipients.length+' recipient'+(g.recipients.length!==1?'s':'')+' · Sent '+formatTime(g.sentAt)+'</div></div>'+
+      '<span class="wc-badge">'+opened+'/'+g.recipients.length+' opened</span>';
+    hist.appendChild(div);
+
+    // Recipients under each wish
+    var sub=document.createElement('div');sub.style.cssText='margin-left:1rem;margin-top:-0.4rem;margin-bottom:0.4rem;display:flex;flex-direction:column;gap:0.3rem';
+    g.recipients.forEach(function(r){
+      var p=document.createElement('div');p.style.cssText='display:flex;align-items:center;gap:0.6rem;font-size:0.82rem;color:var(--tx-3);padding:0.3rem 0';
+      p.innerHTML='<span style="flex:1">'+r.email+'</span>'+
+        '<span class="track-status '+(r.openedAt?'ts-opened':r.sentAt?'ts-sent':'ts-pending')+'">'+(r.openedAt?'✦ Opened':r.sentAt?'✓ Sent':'Pending')+'</span>'+
+        (r.openedAt?'<span class="track-time">'+formatTime(r.openedAt)+'</span>':'');
+      sub.appendChild(p);
+    });
+    hist.appendChild(sub);
+  });
+}
+
+function clearTracking(){if(confirm('Clear all wish history?')){localStorage.removeItem('lum_tracking');loadDashboard();renderTracking();}}
+
+// ── RECIPIENT MANAGEMENT — FIX ──
+// Validation checks recipients.length, NOT the input field value
+function addRecipient(){
+  var inp=document.getElementById('new-email');
+  var email=(inp.value||'').trim().toLowerCase();
+
+  // Basic email validation
+  if(!email||email.indexOf('@')<1||email.indexOf('.')<0){
+    inp.classList.add('err');
+    document.getElementById('err-email').textContent='Please enter a valid email address';
+    document.getElementById('err-email').classList.add('show');
+    return;
+  }
+  // Duplicate check
+  if(recipients.find(function(r){return r.email===email;})){
+    inp.value='';
+    inp.classList.remove('err');
+    return;
+  }
+
+  var id='lum_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+  recipients.push({email:email,id:id,sentAt:null});
+  inp.value='';
+  inp.classList.remove('err');
+  document.getElementById('err-email').classList.remove('show');
+  renderRecipients();
+}
+
+function clearRecipError(){
+  document.getElementById('new-email').classList.remove('err');
+  // Only hide error if there are already recipients
+  if(recipients.length>0)document.getElementById('err-email').classList.remove('show');
+}
+
+function removeRecipient(id){
+  recipients=recipients.filter(function(r){return r.id!==id;});
+  renderRecipients();
+}
+
+function renderRecipients(){
+  var list=document.getElementById('recip-list');
+  var cnt=document.getElementById('recip-count');
+  list.innerHTML='';
+  recipients.forEach(function(r){
+    var row=document.createElement('div');row.className='recip-row';
+    row.innerHTML='<span class="recip-email">'+r.email+'</span>'+
+      '<button class="recip-del" onclick="removeRecipient(\''+r.id+'\')" title="Remove">✕</button>';
+    list.appendChild(row);
+  });
+  if(recipients.length>0){
+    cnt.textContent=recipients.length+' recipient'+(recipients.length!==1?'s':'')+' added';
+    cnt.style.display='block';
+    document.getElementById('err-email').classList.remove('show');
+  } else {
+    cnt.style.display='none';
+  }
+}
+
+// ── STEP 0 VALIDATION — FIX ──
+// Checks recipients array length, not input value
+function step0Next(){
+  var name=document.getElementById('f-name').value.trim();
+  var ok=true;
+
+  // 1. Name check
+  if(!name){
+    document.getElementById('f-name').classList.add('err');
+    document.getElementById('err-name').classList.add('show');
+    ok=false;
+  } else {
+    document.getElementById('f-name').classList.remove('err');
+    document.getElementById('err-name').classList.remove('show');
+  }
+
+  // 2. If email field has something typed but not added, auto-add it
+  var inp=document.getElementById('new-email');
+  var typedEmail=(inp.value||'').trim().toLowerCase();
+  if(typedEmail && typedEmail.indexOf('@')>0){
+    // Auto-add the typed email
+    if(!recipients.find(function(r){return r.email===typedEmail;})){
+      var id='lum_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+      recipients.push({email:typedEmail,id:id,sentAt:null});
+      inp.value='';
+      renderRecipients();
+    }
+  }
+
+  // 3. Check recipients array (NOT the input field)
+  if(recipients.length===0){
+    document.getElementById('err-email').textContent='Add at least one recipient email then click + Add';
+    document.getElementById('err-email').classList.add('show');
+    ok=false;
+  }
+
+  if(ok) goStep(1);
+}
+
+// ── NAVIGATION ──
+function goStep(n){
+  if(n===3)buildReview();
+  document.getElementById('s-'+currentStep).classList.remove('active');
+  document.getElementById('s-'+n).classList.add('active');
+  ['rs-0','rs-1','rs-2','rs-3'].forEach(function(id,i){
+    var el=document.getElementById(id);
+    el.classList.toggle('active',i===n);el.classList.toggle('done',i<n);
+  });
+  currentStep=n;window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function adjC(d){candleCount=Math.max(1,Math.min(14,candleCount+d));document.getElementById('c-val').textContent=candleCount;}
+function selTheme(el,t){document.querySelectorAll('.theme-tile').forEach(function(c){c.classList.remove('sel');});el.classList.add('sel');selThemeVal=t;}
+
+// ── PHOTOS ──
+function onPhotos(e){
+  Array.from(e.target.files).forEach(function(file){
+    compressImg(file,function(url){
+      photos.push(url);
+      var strip=document.getElementById('thumbs');
+      var wrap=document.createElement('div');wrap.className='tw';
+      var img=document.createElement('img');img.src=url;img.className='thumb';
+      var del=document.createElement('button');del.className='tdel';del.textContent='✕';
+      del.onclick=(function(u,w){return function(){photos.splice(photos.indexOf(u),1);w.remove();checkSize();};})(url,wrap);
+      wrap.appendChild(img);wrap.appendChild(del);strip.appendChild(wrap);checkSize();
+    });
+  });e.target.value='';
+}
+function compressImg(file,cb){
+  var r=new FileReader();
+  r.onload=function(ev){var img=new Image();img.onload=function(){var MAX=480,w=img.width,h=img.height;if(w>h&&w>MAX){h=Math.round(h*MAX/w);w=MAX;}else if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}var c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);cb(c.toDataURL('image/jpeg',0.72));};img.src=ev.target.result;};r.readAsDataURL(file);
+}
+function checkSize(){var t=photos.reduce(function(s,p){return s+p.length;},0);document.getElementById('size-warn').classList.toggle('show',t>800000);}
+
+// ── VOICE ──
+function toggleRec(){isRec?stopRec():startRec();}
+function startRec(){
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+    recChunks=[];mediaRec=new MediaRecorder(stream);
+    mediaRec.ondataavailable=function(e){if(e.data.size>0)recChunks.push(e.data);};
+    mediaRec.onstop=function(){
+      voiceBlob=new Blob(recChunks,{type:'audio/webm'});
+      var fr=new FileReader();fr.onload=function(ev){voiceDataURL=ev.target.result;};fr.readAsDataURL(voiceBlob);
+      stream.getTracks().forEach(function(t){t.stop();});
+      document.getElementById('btn-play').style.display='inline-flex';
+      document.getElementById('btn-del').style.display='inline-flex';
+      document.getElementById('rec-ring').classList.remove('recording');
+      document.getElementById('rec-ring').classList.add('has-audio');
+      document.getElementById('rec-ring').textContent='⏺';
+      document.getElementById('rec-status').textContent='Recorded ('+recSecs+'s) — ready';
+      animBars(false);
+    };
+    mediaRec.start();isRec=true;recSecs=0;
+    document.getElementById('rec-ring').classList.add('recording');
+    document.getElementById('rec-ring').textContent='⏹';
+    document.getElementById('rec-status').innerHTML='Recording… <span class="rec-timer" id="rec-t">0s</span>';
+    recInt=setInterval(function(){recSecs++;var t=document.getElementById('rec-t');if(t)t.textContent=recSecs+'s';if(recSecs>=120)stopRec();},1000);
+    animBars(true);
+  }).catch(function(){document.getElementById('rec-status').textContent='Microphone access denied.';});
+}
+function stopRec(){if(mediaRec&&isRec){mediaRec.stop();isRec=false;clearInterval(recInt);}}
+function playRec(){if(voiceBlob)new Audio(URL.createObjectURL(voiceBlob)).play();}
+function deleteRec(){voiceBlob=null;voiceDataURL=null;document.getElementById('btn-play').style.display='none';document.getElementById('btn-del').style.display='none';document.getElementById('rec-ring').classList.remove('recording','has-audio');document.getElementById('rec-ring').textContent='⏺';document.getElementById('rec-status').textContent='Click ⏺ to record a message';animBars(false);}
+function animBars(on){clearInterval(barInt);var bars=document.querySelectorAll('.rb');if(on){barInt=setInterval(function(){bars.forEach(function(b){b.style.height=(4+Math.random()*20)+'px';});},110);}else{var d=[5,10,6,14,8,18,6,12];bars.forEach(function(b,i){b.style.height=(d[i]||8)+'px';});}}
+
+// ── BUILD REVIEW ──
+function buildReview(){
+  var name=document.getElementById('f-name').value||'—';
+  var letter=document.getElementById('f-letter').value||'';
+  var sender=document.getElementById('f-sender').value||'';
+  var lbl={midnight:'Midnight',golden:'Golden Hour',aurora:'Aurora',cherry:'Cherry Blossom',ocean:'Deep Ocean',cosmos:'Cosmos'}[selThemeVal];
+  document.getElementById('env-preview').innerHTML=
+    '<div class="env-lbl">Birthday experience for</div><div class="env-name">'+name+'</div>'+
+    (letter?'<div class="env-msg">'+letter.slice(0,160)+(letter.length>160?'…':'')+'</div>':'')+
+    '<div class="env-tags"><span class="env-tag">'+candleCount+' candles</span><span class="env-tag">'+lbl+'</span><span class="env-tag">'+photos.length+' photo'+(photos.length!==1?'s':'')+'</span>'+(voiceDataURL?'<span class="env-tag">🎙 Voice</span>':'')+(sender?'<span class="env-tag">From '+sender+'</span>':'')+'</div>'+
+    '<div style="margin-top:0.8rem;font-size:0.88rem;color:var(--tx-3)">To: '+recipients.map(function(r){return r.email;}).join(', ')+'</div>';
+}
+
+// ── BUILD URL ──
+function buildPayload(){
+  return {name:document.getElementById('f-name').value.trim(),age:document.getElementById('f-age').value,bday:document.getElementById('f-bday').value,sender:document.getElementById('f-sender').value.trim(),letter:document.getElementById('f-letter').value.trim(),lang:document.getElementById('f-lang').value,candles:candleCount,theme:selThemeVal,photos:photos,voice:voiceDataURL||null};
+}
+function buildURL(){
+  var base=window.location.href.split('?')[0].replace(/[^\/\\]*\.html$/i,'')+'experience.html';
+  return base+'?d='+encodeData(buildPayload());
+}
+function isLocal(){var h=window.location.hostname;return h==='localhost'||h==='127.0.0.1'||h===''||h.startsWith('192.168')||h.startsWith('10.');}
+
+// ── SEND ──
+function sendExp(){
+  var name=document.getElementById('f-name').value.trim();
+  if(!name||recipients.length===0){goStep(0);return;}
+  builtURL=buildURL();
+
+  // Save to tracking store
+  var wishId='wish_'+Date.now();
+  var stored=JSON.parse(localStorage.getItem('lum_tracking')||'[]');
+  var now=new Date().toISOString();
+  recipients.forEach(function(r){
+    stored=stored.filter(function(s){return s.id!==r.id;});
+    stored.push({id:r.id,wishId:wishId,email:r.email,name:name,sentAt:null,openedAt:null,url:builtURL});
+  });
+  localStorage.setItem('lum_tracking',JSON.stringify(stored));
+
+  window._wishId=wishId;
+  window._emailSubj=document.getElementById('f-subj').value.trim()||'A birthday experience is waiting for you, '+name+' \uD83C\uDF82';
+
+  showSuccess();
+}
+
+function showSuccess(){
+  document.querySelectorAll('.step').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('rail').style.display='none';
+  document.getElementById('form-header').style.display='none';
+  document.getElementById('success').style.display='flex';
+  document.getElementById('succ-url').textContent=builtURL;
+  if(isLocal())document.getElementById('deploy-warn').style.display='block';
+
+  // Build per-recipient send list
+  var rl=document.getElementById('send-recip-list');rl.innerHTML='';
+  recipients.forEach(function(r){
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0;border-bottom:1px solid var(--b1);flex-wrap:wrap';
+    row.innerHTML='<span style="flex:1;font-size:0.92rem;min-width:140px">'+r.email+'</span>'+
+      '<span class="track-status ts-pending" id="status-'+r.id+'">Pending</span>';
+    rl.appendChild(row);
+  });
+
+  renderTracking();
+  drawQR(builtURL);
+  shootConfetti(80);
+
+  // Try real API first, fall back to Gmail/mailto
+  trySendViaAPI();
+}
+
+// ── REAL EMAIL SENDING VIA NETLIFY FUNCTION ──
+function trySendViaAPI(){
+  var name=document.getElementById('f-name').value.trim();
+  var sender=document.getElementById('f-sender').value.trim();
+
+  // Show sending state
+  var sendBtn=document.querySelector('#success .btn-send');
+  if(sendBtn){sendBtn.textContent='⏳ Sending…';sendBtn.disabled=true;}
+
+  fetch('/api/send-email',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      recipients:recipients.map(function(r){return r.email;}),
+      birthdayName:name,
+      senderName:sender,
+      experienceURL:builtURL,
+      subject:window._emailSubj
+    })
+  })
+  .then(function(res){return res.json().then(function(d){return {ok:res.ok,data:d};});})
+  .then(function(resp){
+    if(resp.ok||resp.data.success){
+      // Real email sent! Update UI and tracking
+      showApiSuccess(resp.data.results);
+    } else {
+      showApiFallback('API error: '+(resp.data.error||'Unknown'));
+    }
+  })
+  .catch(function(err){
+    // Not deployed yet or API unavailable — show manual fallback
+    showApiFallback(err.message);
+  });
+}
+
+function showApiSuccess(results){
+  // Update tracking store with sentAt
+  var stored=JSON.parse(localStorage.getItem('lum_tracking')||'[]');
+  var now=new Date().toISOString();
+  results.forEach(function(r){
+    if(r.status==='sent'){
+      stored.forEach(function(s){if(s.email===r.email)s.sentAt=now;});
+      var badge=document.getElementById('status-'+getIdForEmail(r.email));
+      if(badge){badge.className='track-status ts-sent';badge.textContent='✓ Sent';}
+    }
+  });
+  localStorage.setItem('lum_tracking',JSON.stringify(stored));
+  renderTracking();
+
+  var sendBtn=document.querySelector('#success .btn-send');
+  if(sendBtn){
+    var sentCount=results.filter(function(r){return r.status==='sent';}).length;
+    sendBtn.textContent='✅ Sent to '+sentCount+' recipient'+(sentCount>1?'s':'')+'!';
+    sendBtn.style.background='linear-gradient(120deg,#1D7A4A,#2da868)';
+    sendBtn.disabled=false;
+  }
+
+  // Show toast
+  showToast('✦ Email'+(results.length>1?'s':'')+' sent successfully!');
+}
+
+function showApiFallback(reason){
+  // API not available (not deployed yet) — show manual options
+  console.log('API unavailable ('+reason+'), showing manual fallback');
+
+  var rl=document.getElementById('send-recip-list');
+  // Replace status badges with action buttons
+  recipients.forEach(function(r){
+    var badge=document.getElementById('status-'+r.id);
+    if(badge){
+      badge.outerHTML=
+        '<button class="btn-sm" style="font-size:0.8rem" onclick="openGmail(\''+r.email+'\')">Gmail</button>'+
+        '<button class="btn-sm" style="font-size:0.8rem" onclick="openMailto(\''+r.email+'\')">Mail app</button>'+
+        '<button class="btn-sm" style="font-size:0.8rem;color:var(--success)" onclick="markSentManual(\''+r.id+'\',this)">✓ Mark sent</button>';
+    }
+  });
+
+  var sendBtn=document.querySelector('#success .btn-send');
+  if(sendBtn){
+    sendBtn.textContent='📧 Open Gmail for all';
+    sendBtn.disabled=false;
+    sendBtn.onclick=sendAllGmail;
+  }
+
+  // Show deploy notice if local
+  if(isLocal()){
+    showToast('Deploy to Netlify to enable automatic email sending');
+  }
+}
+
+function getIdForEmail(email){
+  var r=recipients.find(function(r){return r.email===email;});
+  return r?r.id:'';
+}
+
+// ── MANUAL EMAIL FALLBACKS ──
+function buildEmailParts(email){
+  var name=document.getElementById('f-name').value.trim();
+  var sender=document.getElementById('f-sender').value.trim();
+  var subj=window._emailSubj||'A birthday experience is waiting for you, '+name+' \uD83C\uDF82';
+  var body='Happy Birthday, '+name+'!\n\n'+(sender?'From '+sender+', with love.\n\n':'')+'Someone who cares about you has created an interactive birthday experience — just for you.\n\n✦  Open your party here:\n'+builtURL+'\n\n(Best on a laptop or desktop with camera access enabled.)';
+  return {email:email,subj:subj,body:body};
+}
+function openGmail(email){var p=buildEmailParts(email);window.open('https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(p.email)+'&su='+encodeURIComponent(p.subj)+'&body='+encodeURIComponent(p.body),'_blank');}
+function openMailto(email){var p=buildEmailParts(email);var a=document.createElement('a');a.href='mailto:'+encodeURIComponent(p.email)+'?subject='+encodeURIComponent(p.subj)+'&body='+encodeURIComponent(p.body);document.body.appendChild(a);a.click();document.body.removeChild(a);}
+function sendAllGmail(){recipients.forEach(function(r,i){setTimeout(function(){openGmail(r.email);},i*500);});}
+function sendAllMailto(){openMailto(recipients.map(function(r){return r.email;}).join(','));}
+function markSentManual(id,btn){var s=JSON.parse(localStorage.getItem('lum_tracking')||'[]');s.forEach(function(r){if(r.id===id)r.sentAt=new Date().toISOString();});localStorage.setItem('lum_tracking',JSON.stringify(s));if(btn)btn.textContent='✓ Sent';if(btn)btn.disabled=true;renderTracking();}
+function markSent(id,btn){markSentManual(id,btn);}
+
+// ── TOAST ──
+function showToast(msg){
+  var t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--gold);color:var(--tx);padding:0.8rem 1.6rem;border-radius:50px;font-size:0.92rem;z-index:9990;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,0.4)';
+  t.textContent=msg;document.body.appendChild(t);
+  setTimeout(function(){t.style.transition='opacity 0.5s';t.style.opacity='0';setTimeout(function(){t.remove();},500);},3500);
+}
+
+// ── TRACKING ──
+function renderTracking(){
+  var stored=JSON.parse(localStorage.getItem('lum_tracking')||'[]');
+  var myIds=recipients.map(function(r){return r.id;});
+  var mine=stored.filter(function(s){return myIds.indexOf(s.id)>=0;});
+  var list=document.getElementById('track-list');
+  if(!mine.length){list.innerHTML='<p style="font-size:0.88rem;color:var(--tx-3)">No tracking data yet. Click "Mark sent" after sending.</p>';return;}
+  list.innerHTML='';
+  mine.forEach(function(r){
+    var sc=r.openedAt?'ts-opened':r.sentAt?'ts-sent':'ts-pending';
+    var st=r.openedAt?'✦ Opened':r.sentAt?'✓ Sent':'Pending';
+    var row=document.createElement('div');row.className='track-row';
+    row.innerHTML='<span class="track-email">'+r.email+'</span><span class="track-status '+sc+'">'+st+'</span><span class="track-time">'+(r.openedAt?formatTime(r.openedAt):r.sentAt?formatTime(r.sentAt):'')+'</span>';
+    list.appendChild(row);
+  });
+}
+function formatTime(iso){var d=new Date(iso);return d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+
+// ── PREVIEW (inline iframe with srcdoc injection) ──
+function togglePreview(){
+  var wrap=document.getElementById('preview-frame-wrap');
+  if(previewOpen){wrap.style.display='none';previewOpen=false;document.getElementById('preview-frame').src='about:blank';return;}
+  if(!builtURL)builtURL=buildURL();
+  var frame=document.getElementById('preview-frame');
+  if(isLocal()){
+    fetch('experience.html').then(function(res){return res.text();}).then(function(html){
+      // Inject data directly so preview works on localhost
+      var payload=JSON.stringify(buildPayload());
+      var injected=html.replace(
+        'var _hasData=false;',
+        'var _hasData=true;'
+      ).replace(
+        "try{var raw=new URLSearchParams(window.location.search).get('d');if(raw){var p=decodeData(raw);if(p&&p.name){D=Object.assign({},D,p);_hasData=true;}}}catch(e){}",
+        'try{var _inj='+payload+';D=Object.assign({},D,_inj);}catch(e){}'
+      );
+      frame.srcdoc=injected;
+      wrap.style.display='block';previewOpen=true;
+      setTimeout(function(){wrap.scrollIntoView({behavior:'smooth'});},100);
+    }).catch(function(){window.open(builtURL,'_blank');});
+  } else {
+    frame.src=builtURL;
+    wrap.style.display='block';previewOpen=true;
+    setTimeout(function(){wrap.scrollIntoView({behavior:'smooth'});},100);
+  }
+}
+
+// ── COPY ──
+function copyLink(){
+  var copy=function(txt){try{navigator.clipboard.writeText(txt);}catch(e){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}};
+  copy(builtURL);
+  var b=document.querySelector('.url-copy');b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy';},2200);
+}
+
+// ── QR ──
+function drawQR(text){
+  var cv=document.getElementById('qr-canvas'),ctx=cv.getContext('2d'),W=140;
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,W);
+  ctx.strokeStyle='#c8a45a';ctx.lineWidth=4;ctx.strokeRect(2,2,W-4,W-4);
+  function finder(x,y){ctx.fillStyle='#c8a45a';ctx.fillRect(x,y,24,24);ctx.fillStyle='#fff';ctx.fillRect(x+4,y+4,16,16);ctx.fillStyle='#c8a45a';ctx.fillRect(x+8,y+8,8,8);}
+  finder(10,10);finder(106,10);finder(10,106);
+  var hash=0;for(var i=0;i<text.length;i++)hash=(hash*31+text.charCodeAt(i))|0;
+  var rng=Math.abs(hash);ctx.fillStyle='#04040a';
+  for(var r=0;r<8;r++){for(var col=0;col<8;col++){rng=(rng*1664525+1013904223)&0xffffffff;if((rng>>>0)%2===0)ctx.fillRect(42+col*8,42+r*8,6,6);}}
+  ctx.fillStyle='#c8a45a';ctx.font='bold 18px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('✦',70,70);
+}
+function downloadQR(){var c=document.getElementById('qr-canvas'),a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='luminary-qr.png';a.click();}
+
+// ── RESET ──
+function resetAll(){
+  currentStep=0;candleCount=5;selThemeVal='midnight';photos=[];voiceBlob=null;voiceDataURL=null;builtURL='';recipients=[];previewOpen=false;
+  ['f-name','f-age','f-bday','f-sender','f-letter','f-subj'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('new-email').value='';
+  document.getElementById('thumbs').innerHTML='';document.getElementById('recip-list').innerHTML='';document.getElementById('recip-count').style.display='none';
+  document.getElementById('c-val').textContent='5';
+  document.querySelectorAll('.theme-tile').forEach(function(t){t.classList.toggle('sel',t.dataset.t==='midnight');});
+  deleteRec();checkSize();
+  document.getElementById('success').style.display='none';document.getElementById('preview-frame-wrap').style.display='none';
+  document.getElementById('rail').style.display='flex';document.getElementById('form-header').style.display='block';
+  ['rs-0','rs-1','rs-2','rs-3'].forEach(function(id,i){var el=document.getElementById(id);el.classList.toggle('active',i===0);el.classList.remove('done');});
+  document.querySelectorAll('.step').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('s-0').classList.add('active');
+  document.getElementById('deploy-warn').style.display='none';
+}
+</script>
+</body>
+</html>
